@@ -26,5 +26,6 @@ jobs:
         
     # 3️⃣ Compilation et Tests (mvn package exécute les tests)
     - name: Build and run tests with Maven
-      run:  cd ms-patient/ms-patient
-            mvn -B package 
+      working-directory: ms-patient/ms-patient
+
+      run:  mvn -B package 
