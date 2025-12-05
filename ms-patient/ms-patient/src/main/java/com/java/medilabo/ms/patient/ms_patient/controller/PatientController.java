@@ -25,7 +25,7 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<?> getPatients() {
         try {
             List<Patient> patients = patientService.getAllPatients();
@@ -48,7 +48,7 @@ public class PatientController {
         }
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> createPatient(@RequestBody Patient patient) {
         try {
             Patient newPatient = patientService.createPatient(patient);

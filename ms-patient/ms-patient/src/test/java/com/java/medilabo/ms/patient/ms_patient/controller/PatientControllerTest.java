@@ -46,7 +46,7 @@ public class PatientControllerTest {
 
         when(patientService.getAllPatients()).thenReturn(allPatients);
 
-        mockMvc.perform(get("/patients/"))
+        mockMvc.perform(get("/patients"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()").value(1))
@@ -110,7 +110,7 @@ public class PatientControllerTest {
 
         when(patientService.createPatient(any(Patient.class))).thenReturn(patientCreated);
 
-        mockMvc.perform(post("/patients/")
+        mockMvc.perform(post("/patients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
@@ -128,7 +128,7 @@ public class PatientControllerTest {
         when(patientService.createPatient(any(Patient.class)))
                 .thenThrow(new PatientAlreadyExistException(expectedErrorMessage));
 
-        mockMvc.perform(post("/patients/")
+        mockMvc.perform(post("/patients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
@@ -147,7 +147,7 @@ public class PatientControllerTest {
 
         final String expectedControllerMessage = "Une erreur est survenue : " + serviceExceptionMessage;
 
-        mockMvc.perform(post("/patients/")
+        mockMvc.perform(post("/patients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
@@ -212,7 +212,7 @@ public class PatientControllerTest {
 
         final String expectedControllerMessage = "Une erreur est survenue : " + serviceExceptionMessage;
 
-        mockMvc.perform(put("/patients/{id}", EXISTING_ID) 
+        mockMvc.perform(put("/patients/{id}", EXISTING_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
