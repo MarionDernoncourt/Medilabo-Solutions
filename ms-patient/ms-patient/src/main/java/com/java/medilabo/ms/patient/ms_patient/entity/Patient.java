@@ -29,7 +29,7 @@ public class Patient {
 
     }
 
-    public Patient(String name, String firstname, String lastname, LocalDate birthdate, Genre genre, String address, String phoneNumber) {
+    public Patient(String firstname, String lastname, LocalDate birthdate, Genre genre, String address, String phoneNumber) {
 
         this.firstname = firstname;
         this.lastname = lastname;
@@ -41,6 +41,16 @@ public class Patient {
 
     public int getId() {
         return id;
+    }
+
+    public Patient(Integer id, String firstname, String lastname, LocalDate birthdate, Genre genre, String address, String phoneNumber) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.birthdate = birthdate;
+        this.genre = genre;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
     }
 
     public void setId(int id) {

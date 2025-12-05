@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 public class PatientService {
 
-    private Logger logger = LoggerFactory.getLogger(PatientService.class);
+    private final Logger logger = LoggerFactory.getLogger(PatientService.class);
 
     private final PatientRepository patientRepository;
 
@@ -33,7 +33,7 @@ public class PatientService {
     public Patient getPatientById(Integer id) {
         Patient patient = patientRepository.findById(id).orElseThrow(() -> {
             logger.warn("Patient with id {} not found", id);
-            throw new PatientNotFoundException("Aucun patient trouvé avec cet id " + id);
+            return new PatientNotFoundException("Aucun patient trouvé avec cet id " + id);
         });
         logger.info("Patient found with id {}", id);
         return patient;
@@ -42,7 +42,7 @@ public class PatientService {
     public Patient createPatient(Patient patient) {
         Optional<Patient> newPatient = patientRepository.findByFirstnameAndLastnameAndBirthdate(patient.getFirstname(), patient.getLastname(), patient.getBirthdate());
         if (newPatient.isPresent()) {
-            logger.warn("Patient with id {} already exists", patient.getId());
+            logger.warn("Patient with this identity already exists : {} {} {}", patient.getFirstname(), patient.getLastname(), patient.getBirthdate());
             throw new PatientAlreadyExistException("A patient with the same identity exists.");
         }
         logger.info("Patient created : {} {}", patient.getFirstname(), patient.getLastname());
@@ -53,8 +53,8 @@ public class PatientService {
     public Patient updatePatient(Integer id, Patient patient) {
         Patient patientToUpdate = patientRepository.findById(id)
                 .orElseThrow( () -> {
-                    logger.warn("Patient with id {} not found", id);
-                    throw new PatientNotFoundException("Aucun patient trouvé");
+                    logger.warn("Patient not found");
+                    return new PatientNotFoundException("Aucun patient trouvé");
                 });
 
         //Mise à jour des informations personnelles du patient
