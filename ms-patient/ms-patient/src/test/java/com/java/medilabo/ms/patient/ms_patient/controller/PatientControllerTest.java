@@ -1,5 +1,6 @@
 package com.java.medilabo.ms.patient.ms_patient.controller;
 
+import com.java.medilabo.ms.patient.ms_patient.dto.PatientDTO;
 import com.java.medilabo.ms.patient.ms_patient.entity.Patient;
 import com.java.medilabo.ms.patient.ms_patient.exception.PatientAlreadyExistException;
 import com.java.medilabo.ms.patient.ms_patient.exception.PatientNotFoundException;
@@ -42,7 +43,7 @@ public class PatientControllerTest {
         patient.setLastname("Doe");
         patient.setBirthdate(LocalDate.of(1986, 01, 01));
 
-        List<Patient> allPatients = List.of(patient);
+        List<PatientDTO> allPatients = List.of(new PatientDTO(patient));
 
         when(patientService.getAllPatients()).thenReturn(allPatients);
 
@@ -62,7 +63,7 @@ public class PatientControllerTest {
         patient1.setLastname("Doe");
         patient1.setBirthdate(LocalDate.of(1986, 01, 01));
 
-        when(patientService.getPatientById(any(Integer.class))).thenReturn(patient1);
+        when(patientService.getPatientById(any(Integer.class))).thenReturn(new PatientDTO(patient1));
 
         mockMvc.perform(get("/patients/1"))
                 .andExpect(status().isOk())
@@ -108,7 +109,7 @@ public class PatientControllerTest {
 
         final String patientJson = "{\"firstname\": \"Alice\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\"}";
 
-        when(patientService.createPatient(any(Patient.class))).thenReturn(patientCreated);
+        when(patientService.createPatient(any(PatientDTO.class))).thenReturn(patientCreated);
 
         mockMvc.perform(post("/patients")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -125,7 +126,7 @@ public class PatientControllerTest {
         final String expectedErrorMessage = "Le patient existe déjà dans la base de données.";
         final String patientJson = "{\"firstname\": \"Alice\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\"}";
 
-        when(patientService.createPatient(any(Patient.class)))
+        when(patientService.createPatient(any(PatientDTO.class)))
                 .thenThrow(new PatientAlreadyExistException(expectedErrorMessage));
 
         mockMvc.perform(post("/patients")
@@ -142,7 +143,7 @@ public class PatientControllerTest {
         final String serviceExceptionMessage = "Erreur de base de données inattendue.";
         final String patientJson = "{\"firstname\": \"Alice\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\"}";
 
-        when(patientService.createPatient(any(Patient.class)))
+        when(patientService.createPatient(any(PatientDTO.class)))
                 .thenThrow(new RuntimeException(serviceExceptionMessage));
 
         final String expectedControllerMessage = "Une erreur est survenue : " + serviceExceptionMessage;
@@ -169,7 +170,7 @@ public class PatientControllerTest {
         patientUpdated.setId(EXISTING_ID);
         patientUpdated.setFirstname(updatedFirstName);
 
-        when(patientService.updatePatient(eq(EXISTING_ID), any(Patient.class))).thenReturn(patientUpdated);
+        when(patientService.updatePatient(eq(EXISTING_ID), any(PatientDTO.class))).thenReturn(new PatientDTO(patientUpdated));
 
         mockMvc.perform(put("/patients/{id}", EXISTING_ID)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -188,7 +189,7 @@ public class PatientControllerTest {
         final String updatedFirstName = "Alice_UPDATED";
         final String patientJson = "{\"firstname\": \"" + updatedFirstName + "\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\"}";
 
-        when(patientService.updatePatient(eq(EXISTING_ID), any(Patient.class))).thenThrow(new PatientNotFoundException("Le patient n'existe pas"));
+        when(patientService.updatePatient(eq(EXISTING_ID), any(PatientDTO.class))).thenThrow(new PatientNotFoundException("Le patient n'existe pas"));
 
         mockMvc.perform(put("/patients/{id}", EXISTING_ID)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -207,7 +208,7 @@ public class PatientControllerTest {
         final String updatedFirstName = "Alice_UPDATED";
         final String patientJson = "{\"firstname\": \"" + updatedFirstName + "\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\"}";
 
-        when(patientService.updatePatient(eq(EXISTING_ID), any(Patient.class)))
+        when(patientService.updatePatient(eq(EXISTING_ID), any(PatientDTO.class)))
                 .thenThrow(new RuntimeException(serviceExceptionMessage));
 
         final String expectedControllerMessage = "Une erreur est survenue : " + serviceExceptionMessage;
