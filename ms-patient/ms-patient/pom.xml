@@ -8,7 +8,7 @@
         <version>4.0.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.java.medilabo.ms.patient</groupId>
+    <groupId>com.medilabo</groupId>
     <artifactId>ms-patient</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
