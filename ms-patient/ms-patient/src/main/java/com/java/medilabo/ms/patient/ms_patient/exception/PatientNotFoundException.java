@@ -1,10 +1,6 @@
 package com.java.medilabo.ms.patient.ms_patient.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-// Exception pour un patient non trouvé via la recherche par ID
-@ResponseStatus(HttpStatus.NOT_FOUND)
 public class PatientNotFoundException extends RuntimeException {
     public PatientNotFoundException(String message) {
         super(message);

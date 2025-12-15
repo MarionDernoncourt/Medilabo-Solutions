@@ -43,18 +43,49 @@ public class GlobalExceptionHandler {
 
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGenericException(Exception e) {
-        // Log de l'erreur critique avec la stack trace
-        logger.error("Erreur critique inattendue : {}", e.getMessage(), e);
+    // ---------------------- 2. NOUVEAU : GESTION 404 (Patient Non Trouvé) ----------------------
+    @ExceptionHandler(PatientNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handlePatientNotFoundException(PatientNotFoundException e) {
+
+        logger.warn("Ressource non trouvée (404) : {}", e.getMessage());
 
         Map<String, Object> errorDetails = new LinkedHashMap<>();
         errorDetails.put("timestamp", LocalDateTime.now().toString());
-        errorDetails.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errorDetails.put("error", "Internal Server Error");
-        errorDetails.put("message", "Une erreur interne inattendue est survenue sur le serveur.");
+        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+        errorDetails.put("error", "Not Found");
+        errorDetails.put("message", e.getMessage()); // Le message de l'exception métier
 
-        // C'est le statut retourné au front-end
-        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
-}
+
+    // ---------------------- 3. NOUVEAU : GESTION 409 (Conflit / Doublon) ----------------------
+    @ExceptionHandler(PatientAlreadyExistException.class)
+    public ResponseEntity<Map<String, Object>> handlePatientAlreadyExistException(PatientAlreadyExistException e) {
+
+        logger.warn("Conflit de données (409) : {}", e.getMessage());
+
+        Map<String, Object> errorDetails = new LinkedHashMap<>();
+        errorDetails.put("timestamp", LocalDateTime.now().toString());
+        errorDetails.put("status", HttpStatus.CONFLICT.value());
+        errorDetails.put("error", "Conflict");
+        errorDetails.put("message", e.getMessage());
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
+
+        @ExceptionHandler(Exception.class)
+        public ResponseEntity<Map<String, Object>> handleGenericException (Exception e){
+            // Log de l'erreur critique avec la stack trace
+            logger.error("Erreur critique inattendue : {}", e.getMessage(), e);
+
+            Map<String, Object> errorDetails = new LinkedHashMap<>();
+            errorDetails.put("timestamp", LocalDateTime.now().toString());
+            errorDetails.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorDetails.put("error", "Internal Server Error");
+            errorDetails.put("message", "Une erreur interne inattendue est survenue sur le serveur.");
+
+            // C'est le statut retourné au front-end
+            return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }

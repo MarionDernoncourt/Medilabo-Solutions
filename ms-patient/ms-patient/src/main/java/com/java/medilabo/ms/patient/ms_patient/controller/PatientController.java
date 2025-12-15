@@ -2,21 +2,15 @@ package com.java.medilabo.ms.patient.ms_patient.controller;
 
 import com.java.medilabo.ms.patient.ms_patient.dto.PatientDTO;
 import com.java.medilabo.ms.patient.ms_patient.entity.Patient;
-import com.java.medilabo.ms.patient.ms_patient.exception.PatientAlreadyExistException;
-import com.java.medilabo.ms.patient.ms_patient.exception.PatientNotFoundException;
+
 import com.java.medilabo.ms.patient.ms_patient.service.IPatientService;
-import com.sun.jdi.InternalException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 
 @RestController

@@ -1,6 +1,7 @@
 package com.java.medilabo.ms.patient.ms_patient.controller;
 
 import com.java.medilabo.ms.patient.ms_patient.dto.PatientDTO;
+import com.java.medilabo.ms.patient.ms_patient.entity.Genre;
 import com.java.medilabo.ms.patient.ms_patient.entity.Patient;
 import com.java.medilabo.ms.patient.ms_patient.exception.PatientAlreadyExistException;
 import com.java.medilabo.ms.patient.ms_patient.exception.PatientNotFoundException;
@@ -95,46 +96,53 @@ public class PatientControllerTest {
 
         mockMvc.perform(get("/patients/999"))
                 .andExpect(status().isInternalServerError())
-                .andExpect(content().string(expectedControllerMessage));
+                .andExpect(jsonPath("$.status").value(500))
+                .andExpect(jsonPath("$.error").value("Internal Server Error"));
     }
 
     @Test
     @WithMockUser(username = "testUser", roles = {"USER"})
-    public void testCreatePatient_Success_ShouldReturn201CreatedAndLocationHeader() throws Exception {
+    public void testCreatePatient_Success_ShouldReturn201Created() throws Exception {
         final Integer NEW_ID = 5;
 
         Patient patientCreated = new Patient();
         patientCreated.setId(NEW_ID);
         patientCreated.setFirstname("Alice");
+        patientCreated.setLastname("Zoe");
+        patientCreated.setBirthdate(LocalDate.of(1986, 01, 01));
+        patientCreated.setGenre(Genre.FEMININ);
 
-        final String patientJson = "{\"firstname\": \"Alice\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\"}";
 
-        when(patientService.createPatient(any(PatientDTO.class))).thenReturn(patientCreated);
+        final String patientJson = "{\"firstname\": \"Alice\", \"lastname\": \"Zoe\", \"birthdate\": \"1986-01-01\"}";
+
+        // Simule la création du patient dans le service (retourne l'objet avec l'ID)
+        when(patientService.createPatient(any())).thenReturn(patientCreated);
 
         mockMvc.perform(post("/patients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "http://localhost/patients/" + NEW_ID))
-                .andExpect(content().string(""));
-    }
+                .andExpect(jsonPath("$.firstname").value("Alice"))
+                .andExpect(jsonPath("$.lastname").value("Zoe"));    }
 
     @Test
     @WithMockUser(username = "testUser", roles = {"USER"})
-    public void testCreatePatient_Success_ShouldReturn409CONFLICT() throws Exception {
-        final String expectedErrorMessage = "Le patient existe déjà dans la base de données.";
+    public void testCreatePatient_ShouldReturn409CONFLICT() throws Exception {
+        final String expectedServiceMessage = "A patient with the same identity exists.";
         final String patientJson = "{\"firstname\": \"Alice\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\"}";
 
         when(patientService.createPatient(any(PatientDTO.class)))
-                .thenThrow(new PatientAlreadyExistException(expectedErrorMessage));
+                .thenThrow(new PatientAlreadyExistException(expectedServiceMessage));
 
         mockMvc.perform(post("/patients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
                 .andExpect(status().isConflict())
-                .andExpect(content().string(expectedErrorMessage));
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.error").value("Conflict"))
+                .andExpect(jsonPath("$.message").value(expectedServiceMessage));
     }
 
     @Test
@@ -154,7 +162,9 @@ public class PatientControllerTest {
                         .with(csrf()))
 
                 .andExpect(status().isInternalServerError())
-                .andExpect(content().string(expectedControllerMessage));
+                .andExpect(jsonPath("$.status").value(500))
+                .andExpect(jsonPath("$.error").value("Internal Server Error"));
+
     }
 
     @Test
@@ -218,7 +228,9 @@ public class PatientControllerTest {
                         .content(patientJson)
                         .with(csrf()))
                 .andExpect(status().isInternalServerError())
-                .andExpect(content().string(expectedControllerMessage));
+                .andExpect(jsonPath("$.status").value(500))
+                .andExpect(jsonPath("$.error").value("Internal Server Error"));
+
 
     }
 }
