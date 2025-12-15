@@ -2,11 +2,7 @@ package com.java.medilabo.ms.patient.ms_patient.dto;
 
 import com.java.medilabo.ms.patient.ms_patient.entity.Genre;
 import com.java.medilabo.ms.patient.ms_patient.entity.Patient;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 
@@ -26,7 +22,6 @@ public class PatientDTO {
     @Past(message = "La date de naissance doit être dans le passé")
     private LocalDate birthdate;
     @NotNull(message = "Le genre est obligatoire")
-    @Enumerated(EnumType.STRING)
     private Genre genre;
     @Size(max = 255, message = "L'adresse ne doit pas dépasser 255 caractères.")
     private String address;
