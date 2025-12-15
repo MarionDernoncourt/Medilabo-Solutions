@@ -7,7 +7,10 @@
         <option value="$PROJECT_DIR$/ms-patient/ms-patient/pom.xml" />
         <option value="$PROJECT_DIR$/eureka-server/eureka-server/pom.xml" />
         <option value="$PROJECT_DIR$/config-server/config-server/pom.xml" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/api-gateway/api-gateway/pom.xml" />
+=======
+>>>>>>> b363a47ad86581f45ba2ab0b08a0e6212c518e5e
       </list>
     </option>
   </component>

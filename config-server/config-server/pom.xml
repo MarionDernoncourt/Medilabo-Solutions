@@ -12,7 +12,11 @@
 	<artifactId>config-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
+<<<<<<< HEAD
 	<name>Medilabo.config-server</name>
+=======
+	<name>config-server</name>
+>>>>>>> b363a47ad86581f45ba2ab0b08a0e6212c518e5e
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
