@@ -48,7 +48,7 @@ public class PatientControllerTest {
 
         when(patientService.getAllPatients()).thenReturn(allPatients);
 
-        mockMvc.perform(get("/patients"))
+        mockMvc.perform(get("/patient/list"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()").value(1))
@@ -66,7 +66,7 @@ public class PatientControllerTest {
 
         when(patientService.getPatientById(any(Integer.class))).thenReturn(new PatientDTO(patient1));
 
-        mockMvc.perform(get("/patients/1"))
+        mockMvc.perform(get("/patient/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("firstname").value("John"));
@@ -79,7 +79,7 @@ public class PatientControllerTest {
         when(patientService.getPatientById(999))
                 .thenThrow(new PatientNotFoundException("Le patient n'existe pas."));
 
-        mockMvc.perform(get("/patients/999"))
+        mockMvc.perform(get("/patient/999"))
                 .andExpect(status().isNotFound());
     }
 
@@ -94,7 +94,7 @@ public class PatientControllerTest {
 
         final String expectedControllerMessage = "Une erreur est survenue : " + serviceExceptionMessage;
 
-        mockMvc.perform(get("/patients/999"))
+        mockMvc.perform(get("/patient/999"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.status").value(500))
                 .andExpect(jsonPath("$.error").value("Internal Server Error"));
@@ -118,7 +118,7 @@ public class PatientControllerTest {
         // Simule la création du patient dans le service (retourne l'objet avec l'ID)
         when(patientService.createPatient(any())).thenReturn(patientCreated);
 
-        mockMvc.perform(post("/patients")
+        mockMvc.perform(post("/patient")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
@@ -135,7 +135,7 @@ public class PatientControllerTest {
         when(patientService.createPatient(any(PatientDTO.class)))
                 .thenThrow(new PatientAlreadyExistException(expectedServiceMessage));
 
-        mockMvc.perform(post("/patients")
+        mockMvc.perform(post("/patient")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
@@ -156,7 +156,7 @@ public class PatientControllerTest {
 
         final String expectedControllerMessage = "Une erreur est survenue : " + serviceExceptionMessage;
 
-        mockMvc.perform(post("/patients")
+        mockMvc.perform(post("/patient")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
@@ -182,7 +182,7 @@ public class PatientControllerTest {
 
         when(patientService.updatePatient(eq(EXISTING_ID), any(PatientDTO.class))).thenReturn(new PatientDTO(patientUpdated));
 
-        mockMvc.perform(put("/patients/{id}", EXISTING_ID)
+        mockMvc.perform(put("/patient/{id}", EXISTING_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
@@ -201,7 +201,7 @@ public class PatientControllerTest {
 
         when(patientService.updatePatient(eq(EXISTING_ID), any(PatientDTO.class))).thenThrow(new PatientNotFoundException("Le patient n'existe pas"));
 
-        mockMvc.perform(put("/patients/{id}", EXISTING_ID)
+        mockMvc.perform(put("/patient/{id}", EXISTING_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
@@ -223,7 +223,7 @@ public class PatientControllerTest {
 
         final String expectedControllerMessage = "Une erreur est survenue : " + serviceExceptionMessage;
 
-        mockMvc.perform(put("/patients/{id}", EXISTING_ID)
+        mockMvc.perform(put("/patient/{id}", EXISTING_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))

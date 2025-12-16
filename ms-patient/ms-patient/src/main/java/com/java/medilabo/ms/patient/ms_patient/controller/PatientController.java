@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/patients")
+@RequestMapping("/patient")
 public class PatientController {
 
     private final IPatientService patientService;
@@ -25,9 +25,9 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    @GetMapping("") // Mappe sur GET /patients
+    @GetMapping("/list") // Mappe sur GET /patients
     public ResponseEntity<List<PatientDTO>> getAllPatients() {
-        logger.debug("Requête GET /patients reçue : Récupération de tous les patients.");
+        logger.debug("Requête GET /patient/list reçue : Récupération de tous les patients.");
         List<PatientDTO> patients = patientService.getAllPatients();
 
         logger.info("Réponse reçue : 200 OK, nombre de patients trouvés : {}", patients.size());
@@ -36,7 +36,7 @@ public class PatientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PatientDTO> getPatient(@PathVariable Integer id) {
-        logger.debug("Requête GET /patients/{} reçue.", id);
+        logger.debug("Requête GET /patient/{} reçue.", id);
         PatientDTO patient = patientService.getPatientById(id);
 
         logger.info("Réponse reçue : 200 OK pour le patient ID {}", id);
@@ -45,7 +45,7 @@ public class PatientController {
 
     @PostMapping("")
     public ResponseEntity<PatientDTO> createPatient(@Valid @RequestBody PatientDTO patient) {
-        logger.info("Reçu requête POST /patients : Création d'un nouveau patient ({} {}).", patient.getFirstname(), patient.getLastname());
+        logger.info("Reçu requête POST /patient : Création d'un nouveau patient ({} {}).", patient.getFirstname(), patient.getLastname());
         Patient newPatient = patientService.createPatient(patient);
 
         logger.info("Réponse reçue : 201 CREATED : Le patient {} {} a bien été créé.", newPatient.getFirstname(), newPatient.getLastname());
@@ -55,7 +55,7 @@ public class PatientController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PatientDTO> updatePatient(@PathVariable Integer id, @Valid @RequestBody PatientDTO patient) {
-        logger.info("Reçu requête PUT /patients/{}: Tentative de mise à jour.", id);
+        logger.info("Reçu requête PUT /patient/{}: Tentative de mise à jour.", id);
         PatientDTO patientUpdated = patientService.updatePatient(id, patient);
 
         logger.info("Patient ID {} mis à jour avec succès. Statut: 200 OK.", id);
