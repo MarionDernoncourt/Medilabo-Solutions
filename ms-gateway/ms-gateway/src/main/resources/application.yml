@@ -1,0 +1,19 @@
+server:
+  port: 8088 # Le bon port d'écoute du Gateway
+
+spring:
+  application:
+    name: ms-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # Très important pour le LB
+      routes:
+        - id: patient-service-route
+          uri: lb://MS-PATIENT
+          predicates:
+            - Path=/api/patient/**
+          filters:
+            # 🛑 LE FILTRE CORRIGÉ : Retire uniquement /api/, garde /patient/list
+            - RewritePath=/api/(?<segment>.*), /${segment}
