@@ -6,10 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
  * Configuration de sécurité temporaire pour le développement.
@@ -30,17 +31,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // Désactive la protection CSRF (nécessaire pour les requêtes POST/PUT/DELETE sans token)
+                // Désactive la protection CSRF (microservice sans session=
                 .csrf(AbstractHttpConfigurer::disable)
-                // Ajout du filtre de
+                // Ajout du filtre "douane" : verification badge gateway
                 .addFilterBefore(new InternalApiAuthFilter(headerName, secretValue), UsernamePasswordAuthenticationFilter.class)
                 // Configure les règles d'autorisation
                 .authorizeHttpRequests(authorize -> authorize
-                        // Autorise toutes les requêtes entrantes sans authentification
-                        .anyRequest().authenticated()
+                        .anyRequest().hasRole("GATEWAY")
                 )
-                .httpBasic(withDefaults());
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
-
 }

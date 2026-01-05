@@ -26,12 +26,20 @@ public class InternalApiAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String requestSecret = request.getHeader(headerName);
-
-        if (secretValue.equals(requestSecret)) {
-            // Creation d'une identité "interne" pour Spring Security
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken("internal-gateway", null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_INTERNAL")));
+        if (secretValue != null && secretValue.equals(requestSecret)) {
+            // ✅ C'est la Gateway : création d'une identité avec le rôle ROLE_INTERNAL
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                    "internal-gateway", null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_GATEWAY")));
             SecurityContextHolder.getContext().setAuthentication(auth);
+
+            // On laisse passer la requête vers le controller
+            filterChain.doFilter(request, response);
+        } else {
+            // ❌ Ce n'est pas la Gateway ou le secret est faux : ON BLOQUE
+            SecurityContextHolder.clearContext();
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 Forbidden
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Acces direct non autorise. Vous devez passer par la Gateway.\"}");
         }
-        filterChain.doFilter(request, response);
     }
 }

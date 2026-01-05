@@ -1,24 +1,53 @@
 package com.medilabo.ms_gateway.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebFluxSecurity
 public class SecurityConfig {
+
+    @Value("${spring.security.user.name}")
+    private String username;
+    @Value("${spring.security.user.password}")
+    private String password;
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        return http
-                .csrf(csrf -> csrf.disable())
+        http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable) // Désactivé pour les APIs
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/api/auth/**").permitAll()
-                        .anyExchange().authenticated()
+                        .anyExchange().authenticated()     // Oblige l'identification pour chaque requete
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}))
+                .httpBasic(Customizer.withDefaults()); // Active l'authentification Basic (Header Authorization)
+
+        return http.build();
+    }
+
+    @Bean
+    public MapReactiveUserDetailsService userDetailsService(PasswordEncoder encoder) {
+        // Création de l'utilisateur systeme
+        UserDetails user = User.builder()
+                .username(username)
+                .password(encoder.encode(password))
+                .roles("USER")
                 .build();
+        return new MapReactiveUserDetailsService(user);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        // Standard actuel : BCrypt
+        return new BCryptPasswordEncoder();
     }
 }
