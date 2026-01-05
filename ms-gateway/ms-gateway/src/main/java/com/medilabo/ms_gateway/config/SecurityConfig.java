@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -25,6 +28,7 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
+                .cors(Customizer.withDefaults())
                 .csrf(ServerHttpSecurity.CsrfSpec::disable) // Désactivé pour les APIs
                 .authorizeExchange(exchanges -> exchanges
                         .anyExchange().authenticated()     // Oblige l'identification pour chaque requete
@@ -49,5 +53,22 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         // Standard actuel : BCrypt
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        // Autorisation de l'application Vue
+        config.addAllowedOrigin("http://localhost:5173");
+        // Autorisation des methodes classiques
+        config.addAllowedMethod("*");
+        // Autorisation de tous les headers
+        config.addAllowedHeader("*");
+        // Autorisation d'envoyer des identifiants
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }

@@ -14,6 +14,9 @@ const apiClient = axios.create({
 
 export default {
     getAllPatients() {
-        return apiClient.get("/all");
+        return apiClient.get("/list");
+    },
+    getPatientById(id) {
+        return apiClient.get("/" + id)
     }
 }
