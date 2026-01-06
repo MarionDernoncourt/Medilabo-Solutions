@@ -43,7 +43,7 @@ public class PatientController {
         return ResponseEntity.status(HttpStatus.OK).body(patient);
     }
 
-    @PostMapping("")
+    @PostMapping("/")
     public ResponseEntity<PatientDTO> createPatient(@Valid @RequestBody PatientDTO patient) {
         logger.info("Reçu requête POST /patient : Création d'un nouveau patient ({} {}).", patient.getFirstname(), patient.getLastname());
         Patient newPatient = patientService.createPatient(patient);

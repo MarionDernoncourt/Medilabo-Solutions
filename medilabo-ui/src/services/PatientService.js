@@ -18,5 +18,11 @@ export default {
     },
     getPatientById(id) {
         return apiClient.get("/" + id)
+    },
+    savePatient(id, editablePatient){
+        return apiClient.put("/" + id, editablePatient)
+    },
+    createPatient(patient) {
+        return apiClient.post("/", patient)
     }
 }
