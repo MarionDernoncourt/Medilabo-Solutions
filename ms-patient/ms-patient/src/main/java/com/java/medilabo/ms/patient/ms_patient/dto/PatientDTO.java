@@ -1,5 +1,6 @@
 package com.java.medilabo.ms.patient.ms_patient.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.java.medilabo.ms.patient.ms_patient.entity.Genre;
 import com.java.medilabo.ms.patient.ms_patient.entity.Patient;
 import jakarta.validation.constraints.*;
@@ -9,6 +10,8 @@ import java.time.LocalDate;
 public class PatientDTO {
 
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY) // 👈 TRÈS IMPORTANT
+    private Integer id;
 
     @NotBlank
     @Pattern(regexp = "^[\\p{L}\\s`]+$", message = "Le prénom doit contenir uniquement de lettres, espace ou tiret.")
@@ -34,6 +37,7 @@ public class PatientDTO {
     }
 
     public PatientDTO(Patient patient) {
+        this.id = patient.getId();
         this.firstname = patient.getFirstname();
         this.lastname = patient.getLastname();
         this.birthdate = patient.getBirthdate();
@@ -51,6 +55,11 @@ public class PatientDTO {
         this.phoneNumber = phoneNumber;
     }
 
+
+    public Integer getId() {  return id;  }
+
+    public void setId(Integer id) { this.id = id;
+    }
     public String getFirstname() {
         return firstname;
     }
