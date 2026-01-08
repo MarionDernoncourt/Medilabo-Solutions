@@ -2,7 +2,7 @@
   <header>
     <nav>
       <router-link to="/">Accueil</router-link> |
-      <router-link to="/patients">Patients</router-link>
+      <router-link to="/patients">Patients</router-link> |
       <router-link to="/addPatient">Ajouter un patient</router-link> 
     </nav>
   </header>

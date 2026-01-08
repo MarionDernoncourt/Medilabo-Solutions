@@ -113,12 +113,19 @@ public class PatientControllerTest {
         patientCreated.setGenre(Genre.FEMININ);
 
 
-        final String patientJson = "{\"firstname\": \"Alice\", \"lastname\": \"Zoe\", \"birthdate\": \"1986-01-01\"}";
-
+        final String patientJson = "{" +
+                "\"firstname\": \"Alice\"," +
+                "\"lastname\": \"Zoe\"," +
+                "\"birthdate\": \"1986-01-01\"," +
+                "\"genre\": \"FEMININ\"," +
+                "\"address\": \"123 Rue Test\"," +
+                "\"phoneNumber\": \"0102030405\"" +
+                "}";
+        
         // Simule la création du patient dans le service (retourne l'objet avec l'ID)
         when(patientService.createPatient(any())).thenReturn(patientCreated);
 
-        mockMvc.perform(post("/patient")
+        mockMvc.perform(post("/patient/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
@@ -130,12 +137,18 @@ public class PatientControllerTest {
     @WithMockUser(username = "testUser", roles = {"USER"})
     public void testCreatePatient_ShouldReturn409CONFLICT() throws Exception {
         final String expectedServiceMessage = "A patient with the same identity exists.";
-        final String patientJson = "{\"firstname\": \"Alice\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\"}";
-
+        final String patientJson = "{" +
+                "\"firstname\": \"Alice\"," +
+                "\"lastname\": \"Zoe\"," +
+                "\"birthdate\": \"1986-01-01\"," +
+                "\"genre\": \"FEMININ\"," +
+                "\"address\": \"123 Rue Test\"," +
+                "\"phoneNumber\": \"0102030405\"" +
+                "}";
         when(patientService.createPatient(any(PatientDTO.class)))
                 .thenThrow(new PatientAlreadyExistException(expectedServiceMessage));
 
-        mockMvc.perform(post("/patient")
+        mockMvc.perform(post("/patient/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
@@ -156,7 +169,7 @@ public class PatientControllerTest {
 
         final String expectedControllerMessage = "Une erreur est survenue : " + serviceExceptionMessage;
 
-        mockMvc.perform(post("/patient")
+        mockMvc.perform(post("/patient/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(patientJson)
                         .with(csrf()))
