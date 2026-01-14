@@ -121,7 +121,7 @@ public class PatientControllerTest {
                 "\"address\": \"123 Rue Test\"," +
                 "\"phoneNumber\": \"0102030405\"" +
                 "}";
-        
+
         // Simule la création du patient dans le service (retourne l'objet avec l'ID)
         when(patientService.createPatient(any())).thenReturn(patientCreated);
 

@@ -16,6 +16,13 @@
       </div>
     </div>
 
+    <div v-if="message" class="message" :class="{ error: isError }">
+      {{ message }}
+      <ul v-if="Object.keys(errors).length > 0" class="error-list">
+        <li v-for="(msg, field) in errors" :key="field">{{ msg }}</li>
+      </ul>
+    </div>
+
     <div class="details-card">
       <table class="vertical-table">
         <tbody>
@@ -83,6 +90,13 @@ const router = useRouter();
 const patient = ref({});
 const id = route.params.id;
 
+const message = ref("");
+const isError = ref(false);
+const errors = ref({});
+
+const isEditing = ref(false);
+const editablePatient = ref({});
+
 const goBack = () => {
   router.push({ name: "patients" })
 };
@@ -90,35 +104,52 @@ const goBack = () => {
 onMounted(async () => {
   try {
     const response = await PatientService.getPatientById(id);
-    console.log("Données reçus :", response.data);
     patient.value = response.data;
   } catch (error) {
-    console.log("Erreur API:", error);
+    message.value = "Erreur lors de la récupération du profil";
+    isError.value = true;
   }
 });
 
-const isEditing = ref(false);
-const editablePatient = ref({});
 
 //Basculer en mode edition
 const startEdit = () => {
   editablePatient.value = { ...patient.value };
+  errors.value = {};
+  message.value = "";
   isEditing.value = true;
 };
+
 //Annuler edition
 const stopEdit = () => {
   isEditing.value = false;
+  message.value = "";
+  errors.value = {};
 };
+
 //Sauvegarder edition
 const savePatient = async () => {
   try {
     await PatientService.savePatient(id, editablePatient.value);
     patient.value = { ...editablePatient.value };
-    stopEdit();
+    isError.value = false;
+    message.value = "Profil mis à jour avec succès";
+    setTimeout(() => {
+      stopEdit();
+    }, 1000);
+
   } catch (error) {
-    console.error("Erreur lors de la sauvegarder", error);
+    isError.value = true;
+    if (error.response && error.response.status === 400) {
+      message.value = error.response.data.message || "Erreur de validation";
+      errors.value = error.response.data.details || {};
+    } else {
+      message.value = "Erreur lors de la sauvegarde";
+    } 
+    console.error("Detail de l'erreur: ", error);
   }
 };
+
 
 </script>
 
@@ -197,7 +228,8 @@ const savePatient = async () => {
   outline: none;
 }
 
-.btn-save, .btn-back {
+.btn-save,
+.btn-back {
   margin-right: 10px;
 }
 
@@ -209,5 +241,33 @@ td {
   display: flex;
   align-items: center;
   min-height: 50px;
+}
+
+.message {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #2e7d32;
+  text-align: center;
+}
+
+.message.error {
+  background-color: #fff5f6;
+  color: #ff6b7f;
+  border: 1px solid #ff6b7f;
+}
+
+.error-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 5px;
+  font-size: 0.9rem;
+}
+
+.input-error {
+  border: 2px solid #ff6b7f !important;
+  background-color: #fff8f8;
 }
 </style>

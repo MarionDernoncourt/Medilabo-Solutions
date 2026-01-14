@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,6 +56,7 @@ public class PatientController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PatientDTO> updatePatient(@PathVariable Integer id, @Valid @RequestBody PatientDTO patient) {
+
         logger.info("Reçu requête PUT /patient/{}: Tentative de mise à jour.", id);
         PatientDTO patientUpdated = patientService.updatePatient(id, patient);
 
