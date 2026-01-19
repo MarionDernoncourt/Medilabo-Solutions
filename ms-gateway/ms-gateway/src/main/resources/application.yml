@@ -39,3 +39,13 @@ spring:
           filters:
             # ✅ Correction de l'anti-slash ici
             - RewritePath=/api/(?<segment>.*), /${segment}
+        - id: notes-service-route
+          uri: lb://MS-NOTES
+          predicates:
+            - Path=/api/notes/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /${segment}
+            # 🛡️ Sécurité : on nettoie ce qui vient de l'extérieur
+            - RemoveRequestHeader=${medilabo.security.internal-header}
+            # 🔑 On ajoute notre secret (en utilisant la variable du haut)
+            - AddRequestHeader=${medilabo.security.internal-header}, ${medilabo.security.internal-secret}
