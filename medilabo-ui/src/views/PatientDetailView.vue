@@ -18,7 +18,7 @@
 
     <div v-if="message" class="message" :class="{ error: isError }">
       {{ message }}
-    
+
     </div>
 
     <div class="details-card">
@@ -27,22 +27,40 @@
           <tr>
             <th>Nom</th>
             <td>
-              <span v-if="!isEditing">{{ patient.lastname }}</span>
-              <input v-else v-model="editablePatient.lastname" class="edit-input" />
+              <div class="input-container">
+                <span v-if="!isEditing">{{ patient.lastname }}</span>
+                <template v-else>
+                  <input v-model="editablePatient.lastname" class="edit-input"
+                    :class="{ 'input-error': errors.lastname }" />
+                  <span v-if="errors.lastname" class="error-text">{{ errors.lastname }}</span>
+                </template>
+              </div>
             </td>
           </tr>
           <tr>
             <th>Prénom</th>
             <td>
-              <span v-if="!isEditing">{{ patient.firstname }}</span>
-              <input v-else v-model="editablePatient.firstname" class="edit-input" />
+              <div class="input-container">
+                <span v-if="!isEditing">{{ patient.firstname }}</span>
+                <template v-else>
+                  <input v-model="editablePatient.firstname" class="edit-input"
+                    :class="{ 'input-error': errors.firstname }" />
+                  <span v-if="errors.firstname" class="error-text">{{ errors.firstname }}</span>
+                </template>
+              </div>
             </td>
           </tr>
           <tr>
             <th>Date de Naissance</th>
             <td>
-              <span v-if="!isEditing">{{ patient.birthdate }}</span>
-              <input v-else type="date" v-model="editablePatient.birthdate" class="edit-input" />
+              <div class="input-container">
+                <span v-if="!isEditing">{{ patient.birthdate }}</span>
+                <template v-else>
+                  <input v-model="editablePatient.birthdate" class="edit-input"
+                    :class="{ 'input-error': errors.birthdate }" />
+                  <span v-if="errors.birthdate" class="error-text">{{ errors.birthdate }}</span>
+                </template>
+              </div>
             </td>
           </tr>
           <tr>
@@ -61,14 +79,22 @@
             <th>Adresse</th>
             <td>
               <span v-if="!isEditing"> {{ patient.address }}</span>
-              <input v-else v-model="editablePatient.address" class="edit-input" />
+              <template v-else>
+                <input v-model="editablePatient.address" class="edit-input"
+                  :class="{ 'input-error': errors.address }" />
+                <span v-if="errors.address" class="error-text">{{ errors.address }}</span>
+              </template>
             </td>
           </tr>
           <tr>
             <th>Téléphone</th>
             <td>
               <span v-if="!isEditing"> {{ patient.phoneNumber }}</span>
-              <input v-else v-model="editablePatient.phoneNumber" class="edit-input" />
+              <template v-else>
+                <input v-model="editablePatient.phoneNumber" class="edit-input"
+                  :class="{ 'input-error': errors.phoneNumber }" />
+                <span v-if="errors.phoneNumber" class="error-text">{{ errors.phoneNumber }}</span>
+              </template>
             </td>
           </tr>
         </tbody>
@@ -143,7 +169,7 @@ const savePatient = async () => {
       errors.value = error.response.data.details || {};
     } else {
       message.value = "Erreur lors de la sauvegarde";
-    } 
+    }
     console.error("Detail de l'erreur: ", error);
   }
 };
@@ -189,14 +215,6 @@ const savePatient = async () => {
   border-right: 2px solid #ff6b7f;
   font-weight: 600;
 }
-
-.vertical-table td {
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  color: #2c3e50;
-  font-size: 1.1rem;
-}
-
 .btn-detail,
 .btn-back,
 .btn-save,
@@ -217,6 +235,7 @@ const savePatient = async () => {
 }
 
 .edit-input {
+  box-sizing: border-box;
   width: 100%;
   padding: 8px;
   border: 1px solid #ff6b7f;
@@ -234,13 +253,6 @@ const savePatient = async () => {
 .edit-input:focus {
   box-shadow: 0 0 5px rgba(255, 107, 127, 0.3);
 }
-
-td {
-  display: flex;
-  align-items: center;
-  min-height: 50px;
-}
-
 .message {
   padding: 15px;
   margin-bottom: 20px;
@@ -262,6 +274,28 @@ td {
   padding: 0;
   margin-top: 5px;
   font-size: 0.9rem;
+}
+.vertical-table td {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  vertical-align: top; 
+  overflow: hidden;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column; 
+  width: 100%;
+}
+
+.error-text {
+  color: #ff6b7f;
+  font-size: 0.85rem; 
+  margin-top: 5px; 
+  font-weight: bold;
+  display: block; 
 }
 
 .input-error {

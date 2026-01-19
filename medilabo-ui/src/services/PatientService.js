@@ -7,7 +7,7 @@ const apiClient = axios.create({
     baseURL: API_URL,
     // Ajout de l'authentification demandée par la GATEWAY
     auth: {
-        username: "web-client-app",
+        username: "authorized-client",
         password: "SuperSecretPassword2025!"
     }
 });

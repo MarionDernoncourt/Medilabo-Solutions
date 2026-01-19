@@ -10,7 +10,7 @@ medilabo:
 spring:
   security:
     user:
-      name: "web-client-app"
+      name: "authorized-client"
       password: "SuperSecretPassword2025!"
   application:
     name: ms-gateway
