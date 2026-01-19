@@ -28,28 +28,28 @@ public class PatientController {
 
     @GetMapping("/list") // Mappe sur GET /patients
     public ResponseEntity<List<PatientDTO>> getAllPatients() {
-        logger.debug("Requête GET /patient/list reçue : Récupération de tous les patients.");
+        logger.debug(" GET /patient/list request received : Fetching all patients.");
         List<PatientDTO> patients = patientService.getAllPatients();
 
-        logger.info("Réponse reçue : 200 OK, nombre de patients trouvés : {}", patients.size());
+        logger.info("Response received : 200 OK, patients found : {}", patients.size());
         return ResponseEntity.status(HttpStatus.OK).body(patients);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PatientDTO> getPatient(@PathVariable Integer id) {
-        logger.debug("Requête GET /patient/{} reçue.", id);
+        logger.debug("GET /patient/{} request received", id);
         PatientDTO patient = patientService.getPatientById(id);
 
-        logger.info("Réponse reçue : 200 OK pour le patient ID {}", id);
+        logger.info("Response received : 200 OK for the patient with the id {}", id);
         return ResponseEntity.status(HttpStatus.OK).body(patient);
     }
 
     @PostMapping("/")
     public ResponseEntity<PatientDTO> createPatient(@Valid @RequestBody PatientDTO patient) {
-        logger.info("Reçu requête POST /patient : Création d'un nouveau patient ({} {}).", patient.getFirstname(), patient.getLastname());
+        logger.info("POST /patient request received: New patient created :  ({} {}).", patient.getFirstname(), patient.getLastname());
         Patient newPatient = patientService.createPatient(patient);
 
-        logger.info("Réponse reçue : 201 CREATED : Le patient {} {} a bien été créé.", newPatient.getFirstname(), newPatient.getLastname());
+        logger.info("Response received : 201 CREATED : The patient {} {} has been created with the id {}.", newPatient.getFirstname(), newPatient.getLastname(), newPatient.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(new PatientDTO(newPatient));
 
     }
@@ -57,10 +57,10 @@ public class PatientController {
     @PutMapping("/{id}")
     public ResponseEntity<PatientDTO> updatePatient(@PathVariable Integer id, @Valid @RequestBody PatientDTO patient) {
 
-        logger.info("Reçu requête PUT /patient/{}: Tentative de mise à jour.", id);
+        logger.info("PUT /patient/{} request received: Trying to updated.", id);
         PatientDTO patientUpdated = patientService.updatePatient(id, patient);
 
-        logger.info("Patient ID {} mis à jour avec succès. Statut: 200 OK.", id);
+        logger.info("Response received : 200 OK : The patient with id {} has been updated", id);
         return new ResponseEntity<>(patientUpdated, HttpStatus.OK);
     }
 

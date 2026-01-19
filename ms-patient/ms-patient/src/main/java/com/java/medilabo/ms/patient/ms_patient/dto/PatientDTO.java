@@ -13,15 +13,15 @@ public class PatientDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY) // 👈 TRÈS IMPORTANT
     private Integer id;
 
-    @NotBlank
-    @Pattern(regexp = "^[\\p{L}\\s`]+$", message = "Le prénom doit contenir uniquement de lettres, espace ou tiret.")
+    @NotBlank(message = "Le prénom est obligatoire.")
+    @Pattern(regexp = "^[\\p{L}\\s`]+$", message = "Le prénom doit contenir uniquement des lettres, espace ou tiret.")
     @Size(min=1, max = 50, message = "Le prénom doit contenir entre 1 et 50 caractères.")
     private String firstname;
-    @NotBlank
-    @Pattern(regexp = "^[\\p{L}\\s`]+$", message = "Le nom doit contenir uniquement de lettres, espace ou tiret.")
+    @NotBlank(message="Le nom est obligatoire.")
+    @Pattern(regexp = "^[\\p{L}\\s`]+$", message = "Le nom doit contenir uniquement des lettres, espace ou tiret.")
     @Size(min=1, max = 50, message = "Le nom doit contenir entre 1 et 50 caractères.")
     private String lastname;
-    @NotNull
+    @NotNull(message= "La date de naissance est obligatoire.")
     @Past(message = "La date de naissance doit être dans le passé")
     private LocalDate birthdate;
     @NotNull(message = "Le genre est obligatoire")
@@ -32,6 +32,9 @@ public class PatientDTO {
             message = "Le numéro de téléphone est invalide. Il doit être entre 7 et 20 caractères et contenir des chiffres, espaces, +, -, . ou parenthèses.")
     @Size(max = 20, message = "Le numéro de téléphone ne doit pas dépasser 20 caractères.")
     private String phoneNumber;
+
+    public PatientDTO() {
+    }
 
     public PatientDTO(Patient patient) {
         this.id = patient.getId();

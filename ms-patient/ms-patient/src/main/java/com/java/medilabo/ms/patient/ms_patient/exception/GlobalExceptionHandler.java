@@ -35,9 +35,10 @@ public class GlobalExceptionHandler {
         errorDetails.put("timestamp", LocalDateTime.now().toString());
         errorDetails.put("status", HttpStatus.BAD_REQUEST.value());
         errorDetails.put("error", "Bad Request");
-        errorDetails.put("message", "Erreur de validation des champs.");
+        errorDetails.put("message", "Certains champs sont invalides.");
         errorDetails.put("details", fieldErrors); // Contient la liste des erreurs par champ
 
+        logger.warn("Validation failed for request. Sent 400 Bad Request to client.");
         // 3. Retourner la réponse 400
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 
@@ -55,6 +56,8 @@ public class GlobalExceptionHandler {
         errorDetails.put("error", "Not Found");
         errorDetails.put("message", e.getMessage()); // Le message de l'exception métier
 
+        logger.warn("Validation failed for request. Sent 404 Not Found to client.");
+
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
@@ -69,6 +72,8 @@ public class GlobalExceptionHandler {
         errorDetails.put("status", HttpStatus.CONFLICT.value());
         errorDetails.put("error", "Conflict");
         errorDetails.put("message", e.getMessage());
+
+        logger.warn("Validation failed for request. Sent 409 Conflict to client.");
 
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
     }

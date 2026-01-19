@@ -10,6 +10,7 @@
 
     <div v-if="message" class="message" :class="{ error: isError }">
       {{ message }}
+      
     </div>
 
     <div class="details-card">
@@ -181,20 +182,10 @@ const save = async () => {
 }
 
 .vertical-table td {
-  padding: 10px 15px;
+  padding: 15px; 
   border-bottom: 1px solid #eee;
   color: #2c3e50;
-  display: table-cell;
   vertical-align: middle;
-}
-
-/* GESTION DES INPUTS ET ERREURS */
-.input-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 55px; /* Évite que la ligne saute quand l'erreur apparaît */
-  justify-content: center;
 }
 
 .edit-input {
@@ -205,18 +196,6 @@ const save = async () => {
   font-size: 1rem;
   color: #2c3e50;
   outline: none;
-}
-
-.input-error {
-  border: 1px solid #ff6b7f !important;
-  background-color: #fff8f8;
-}
-
-.error-text {
-  color: #ff6b7f;
-  font-size: 0.8rem;
-  font-weight: bold;
-  margin-top: 4px;
 }
 
 /* BOUTONS */
@@ -251,5 +230,24 @@ const save = async () => {
   background-color: #fff5f6;
   color: #ff6b7f;
   border: 1px solid #ff6b7f;
+}
+.input-error {
+  border: 2px solid #ff6b7f !important; 
+  background-color: #fff8f8;
+}
+
+.error-text {
+  color: #ff6b7f;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-top: 4px;
+  display: block; 
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
 }
 </style>

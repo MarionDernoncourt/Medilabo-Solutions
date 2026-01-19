@@ -45,7 +45,7 @@ public class PatientService implements IPatientService {
     public PatientDTO getPatientById(Integer id) {
         Patient patient = patientRepository.findById(id).orElseThrow(() -> {
             logger.warn("Patient with id {} not found", id);
-            return new PatientNotFoundException("Aucun patient trouvé avec cet id " + id);
+            return new PatientNotFoundException("No patient found with this id : " + id);
         });
         logger.info("Patient found with id {}", id);
 
@@ -74,7 +74,7 @@ public class PatientService implements IPatientService {
         Patient patientToUpdate = patientRepository.findById(id)
                 .orElseThrow(() -> {
                     logger.warn("Patient not found");
-                    return new PatientNotFoundException("Aucun patient trouvé");
+                    return new PatientNotFoundException("Patient not found");
                 });
         //Mise à jour des informations personnelles du patient
         patientToUpdate.updateFromDto(patient);

@@ -18,9 +18,7 @@
 
     <div v-if="message" class="message" :class="{ error: isError }">
       {{ message }}
-      <ul v-if="Object.keys(errors).length > 0" class="error-list">
-        <li v-for="(msg, field) in errors" :key="field">{{ msg }}</li>
-      </ul>
+    
     </div>
 
     <div class="details-card">
