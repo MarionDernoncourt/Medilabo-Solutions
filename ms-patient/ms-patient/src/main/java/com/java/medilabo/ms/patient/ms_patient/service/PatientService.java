@@ -54,9 +54,9 @@ public class PatientService implements IPatientService {
 
     @Override
     public Patient createPatient(PatientDTO patient) {
-        Optional<Patient> newPatient = patientRepository.findByFirstnameAndLastnameAndBirthdate(patient.getFirstname(), patient.getLastname(), patient.getBirthdate());
+        Optional<Patient> newPatient = patientRepository.findByFirstnameAndLastnameAndBirthdateAndGenre(patient.getFirstname(), patient.getLastname(), patient.getBirthdate(), patient.getGenre());
         if (newPatient.isPresent()) {
-            logger.warn("Patient with this identity already exists : {} {} {}", patient.getFirstname(), patient.getLastname(), patient.getBirthdate());
+            logger.warn("Patient with this identity already exists : {} {} {} {}", patient.getFirstname(), patient.getLastname(), patient.getBirthdate(), patient.getGenre());
             throw new PatientAlreadyExistException("A patient with the same identity exists.");
         }
 
