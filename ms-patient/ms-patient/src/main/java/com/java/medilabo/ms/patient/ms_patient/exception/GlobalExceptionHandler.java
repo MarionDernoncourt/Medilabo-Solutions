@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
 
     }
 
-    // ---------------------- 2. NOUVEAU : GESTION 404 (Patient Non Trouvé) ----------------------
+    // GESTION 404 (Patient Non Trouvé)
     @ExceptionHandler(PatientNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handlePatientNotFoundException(PatientNotFoundException e) {
 
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
-    // ---------------------- 3. NOUVEAU : GESTION 409 (Conflit / Doublon) ----------------------
+    // GESTION 409 (Conflit / Doublon)
     @ExceptionHandler(PatientAlreadyExistException.class)
     public ResponseEntity<Map<String, Object>> handlePatientAlreadyExistException(PatientAlreadyExistException e) {
 

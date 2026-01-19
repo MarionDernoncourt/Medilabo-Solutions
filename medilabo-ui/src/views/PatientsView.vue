@@ -1,7 +1,11 @@
 <template>
   <div class="container">
-    <h1>Liste des Patients</h1>
-    
+    <div class="title-container">
+      <h1>Liste des Patients</h1>
+      <button class="btn-add" @click="router.push('/addPatient')">
+        Ajouter un patient
+      </button>
+    </div>
     <div class="table-container">
       <table v-if="patients && patients.length > 0" class="patient-table">
         <thead>
@@ -44,7 +48,7 @@ const route = useRoute();
 
 
 const goToPatient = (id) => {
-  router.push({name: "patient-detail", params: { id : id}});
+  router.push({ name: "patient-detail", params: { id: id } });
 };
 
 onMounted(async () => {
@@ -66,7 +70,11 @@ onMounted(async () => {
   margin: 0 auto;
   font-family: Arial, sans-serif;
 }
-
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 h1 {
   color: #2c3e50;
   margin-bottom: 20px;
@@ -102,6 +110,7 @@ h1 {
   background-color: #f9f9f9;
 }
 
+.btn-add,
 .btn-detail {
   background-color: #34495e;
   color: white;
@@ -111,6 +120,7 @@ h1 {
   cursor: pointer;
 }
 
+.btn-add,
 .btn-detail:hover {
   background-color: #ff6b7f;
 }

@@ -33,9 +33,6 @@ public class PatientDTO {
     @Size(max = 20, message = "Le numéro de téléphone ne doit pas dépasser 20 caractères.")
     private String phoneNumber;
 
-    public PatientDTO() {
-    }
-
     public PatientDTO(Patient patient) {
         this.id = patient.getId();
         this.firstname = patient.getFirstname();
