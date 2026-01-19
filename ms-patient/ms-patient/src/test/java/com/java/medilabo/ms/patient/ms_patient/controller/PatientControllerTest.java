@@ -162,7 +162,7 @@ public class PatientControllerTest {
     @WithMockUser(username = "testUser", roles = {"USER"})
     public void testCreatePatient_Success_ShouldReturn500INTERNALERROR() throws Exception {
         final String serviceExceptionMessage = "Erreur de base de données inattendue.";
-        final String patientJson = "{\"firstname\": \"Alice\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\"}";
+        final String patientJson = "{\"firstname\": \"Alice\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\", \"genre\": \"FEMININ\"}";
 
         when(patientService.createPatient(any(PatientDTO.class)))
                 .thenThrow(new RuntimeException(serviceExceptionMessage));
@@ -186,8 +186,8 @@ public class PatientControllerTest {
 
         final Integer EXISTING_ID = 1;
 
-        final String updatedFirstName = "Alice_UPDATED";
-        final String patientJson = "{\"firstname\": \"" + updatedFirstName + "\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\"}";
+        final String updatedFirstName = "Alice-UPDATED";
+        final String patientJson = "{\"firstname\": \"" + updatedFirstName + "\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\", \"genre\": \"FEMININ\"}";
 
         Patient patientUpdated = new Patient();
         patientUpdated.setId(EXISTING_ID);
@@ -209,8 +209,8 @@ public class PatientControllerTest {
     public void testUpdatePatient_shouldReturn404NOTFOUND() throws Exception {
 
         final Integer EXISTING_ID = 1;
-        final String updatedFirstName = "Alice_UPDATED";
-        final String patientJson = "{\"firstname\": \"" + updatedFirstName + "\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\"}";
+        final String updatedFirstName = "Alice-UPDATED";
+        final String patientJson = "{\"firstname\": \"" + updatedFirstName + "\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\", \"genre\": \"FEMININ\" }";
 
         when(patientService.updatePatient(eq(EXISTING_ID), any(PatientDTO.class))).thenThrow(new PatientNotFoundException("Le patient n'existe pas"));
 
@@ -228,8 +228,12 @@ public class PatientControllerTest {
         final String serviceExceptionMessage = "Erreur de base de données inattendue.";
 
         final Integer EXISTING_ID = 1;
-        final String updatedFirstName = "Alice_UPDATED";
-        final String patientJson = "{\"firstname\": \"" + updatedFirstName + "\", \"lastname\": \"Zoe\", \"birthdate\": \"1990-01-01\"}";
+        final String patientJson = "{" +
+                "\"firstname\": \"Alice\"," +
+                "\"lastname\": \"Zoe\"," +
+                "\"birthdate\": \"1990-01-01\"," +
+                "\"genre\": \"MASCULIN\"" + // Ajout du genre pour passer la validation
+                "}";
 
         when(patientService.updatePatient(eq(EXISTING_ID), any(PatientDTO.class)))
                 .thenThrow(new RuntimeException(serviceExceptionMessage));

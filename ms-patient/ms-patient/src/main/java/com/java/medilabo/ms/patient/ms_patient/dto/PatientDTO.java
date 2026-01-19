@@ -14,11 +14,11 @@ public class PatientDTO {
     private Integer id;
 
     @NotBlank(message = "Le prénom est obligatoire.")
-    @Pattern(regexp = "^[\\p{L}\\s`]+$", message = "Le prénom doit contenir uniquement des lettres, espace ou tiret.")
+    @Pattern(regexp = "^[\\p{L}\\s\\-`']+$", message = "Le prénom doit contenir uniquement des lettres, espace ou tiret.")
     @Size(min=1, max = 50, message = "Le prénom doit contenir entre 1 et 50 caractères.")
     private String firstname;
     @NotBlank(message="Le nom est obligatoire.")
-    @Pattern(regexp = "^[\\p{L}\\s`]+$", message = "Le nom doit contenir uniquement des lettres, espace ou tiret.")
+    @Pattern(regexp = "^[\\p{L}\\s\\-`']+$", message = "Le nom doit contenir uniquement des lettres, espace ou tiret.")
     @Size(min=1, max = 50, message = "Le nom doit contenir entre 1 et 50 caractères.")
     private String lastname;
     @NotNull(message= "La date de naissance est obligatoire.")
