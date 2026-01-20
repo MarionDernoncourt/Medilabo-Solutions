@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PatientRepository extends JpaRepository<Patient,Integer> {
+public interface IPatientRepository extends JpaRepository<Patient,Integer> {
 
     Optional<Patient> findByFirstnameAndLastnameAndBirthdateAndGenre(String firstname, String lastname, LocalDate birthdate, Genre genre);
 }
