@@ -1,0 +1,51 @@
+# --- Java & Build Tools ---
+target/
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# --- Maven ---
+.mvn/
+mvnw
+mvnw.cmd
+.factorypath
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+# On garde parfois le fichier compiler.xml, mais dans votre cas il vaut mieux tout ignorer pour l'instant
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/modules.xml
+.idea/vcs.xml
+
+# --- Eclipse ---
+.settings/
+.project
+.classpath
+.springBeans
+.sts4-cache
+
+# --- VS Code ---
+.vscode/
+
+# --- Système & Logs ---
+*.log
+.DS_Store
+Thumbs.db
+temp/
+tmp/
+
+# --- Spring Boot ---
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
