@@ -5,11 +5,10 @@ import com.java.medilabo.ms.patient.ms_patient.entity.Genre;
 import com.java.medilabo.ms.patient.ms_patient.entity.Patient;
 import com.java.medilabo.ms.patient.ms_patient.exception.PatientAlreadyExistException;
 import com.java.medilabo.ms.patient.ms_patient.exception.PatientNotFoundException;
-import com.java.medilabo.ms.patient.ms_patient.repository.PatientRepository;
+import com.java.medilabo.ms.patient.ms_patient.repository.IPatientRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
@@ -29,7 +26,7 @@ public class PatientIntegrationTest {
     @Autowired
     private PatientService patientService;
     @Autowired
-    private PatientRepository patientRepository;
+    private IPatientRepository patientRepository;
 
 
     @Test

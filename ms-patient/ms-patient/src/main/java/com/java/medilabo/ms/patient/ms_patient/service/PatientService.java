@@ -4,12 +4,11 @@ import com.java.medilabo.ms.patient.ms_patient.dto.PatientDTO;
 import com.java.medilabo.ms.patient.ms_patient.entity.Patient;
 import com.java.medilabo.ms.patient.ms_patient.exception.PatientAlreadyExistException;
 import com.java.medilabo.ms.patient.ms_patient.exception.PatientNotFoundException;
-import com.java.medilabo.ms.patient.ms_patient.repository.PatientRepository;
+import com.java.medilabo.ms.patient.ms_patient.repository.IPatientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +19,9 @@ public class PatientService implements IPatientService {
 
     private final Logger logger = LoggerFactory.getLogger(PatientService.class);
 
-    private final PatientRepository patientRepository;
+    private final IPatientRepository patientRepository;
 
-    public PatientService(PatientRepository patientRepository) {
+    public PatientService(IPatientRepository patientRepository) {
         this.patientRepository = patientRepository;
     }
 
