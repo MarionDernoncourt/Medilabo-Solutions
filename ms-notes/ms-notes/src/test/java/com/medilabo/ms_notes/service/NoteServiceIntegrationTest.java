@@ -1,5 +1,6 @@
 package com.medilabo.ms_notes.service;
 
+import com.medilabo.ms_notes.dto.NoteDTO;
 import com.medilabo.ms_notes.dto.PatientDTO;
 import com.medilabo.ms_notes.entity.Note;
 import com.medilabo.ms_notes.exceptions.PatientNotFoundException;
@@ -41,7 +42,7 @@ public class NoteServiceIntegrationTest {
         note.setPatientId(99);
         note.setNote("Note de référence pré-existante");
 
-        referenceNote = noteRepository.save(note);
+        this.referenceNote = noteRepository.save(note);
     }
 
     @AfterEach
@@ -51,8 +52,10 @@ public class NoteServiceIntegrationTest {
 
     @Test
     public void getNotesTest() {
-        List<Note> notes = noteService.getNotesByPatientId(99);
+        List<NoteDTO> notes = noteService.getNotesByPatientId(99);
         assertEquals(1, notes.size());
+        assertEquals(referenceNote.getNote(), notes.get(0).getNote());
+        assertEquals(referenceNote.getId(), notes.get(0).getId());
     }
 
     @Test
@@ -69,13 +72,13 @@ public class NoteServiceIntegrationTest {
 
     @Test
     public void saveNotesTest_WhenSuccess() {
-        Note newNote = new Note();
+        NoteDTO newNote = new NoteDTO();
         newNote.setPatientId(99);
         newNote.setNote("Ma 2eme note");
 
-        Note note = noteService.save(newNote);
+        NoteDTO note = noteService.save(newNote);
 
-        List<Note> notes = noteService.getNotesByPatientId(99);
+        List<NoteDTO> notes = noteService.getNotesByPatientId(99);
 
         assertEquals(2, notes.size());
         assertEquals("Ma 2eme note", note.getNote());
@@ -83,7 +86,7 @@ public class NoteServiceIntegrationTest {
 
     @Test
     public void saveNotesTest_WhenPatientIsNotFound() {
-        Note newNote = new Note();
+        NoteDTO newNote = new NoteDTO();
         newNote.setPatientId(12);
         newNote.setNote("Ma 2eme note");
 
@@ -94,7 +97,7 @@ public class NoteServiceIntegrationTest {
 
     @Test
     public void saveNotedTest_WhenPatientServiceIsUnavailable() {
-        Note newNote = new Note();
+        NoteDTO newNote = new NoteDTO();
         newNote.setPatientId(12);
         newNote.setNote("Ma 2eme note");
 
@@ -105,12 +108,12 @@ public class NoteServiceIntegrationTest {
 
     @Test
     public void saveNotesTest_ShouldGenerateCreatedAt() {
-        Note newNote = new Note();
+        NoteDTO newNote = new NoteDTO();
         newNote.setPatientId(99);
         newNote.setNote("Test audit");
         when(patientProxy.getPatientById(99)).thenReturn(new PatientDTO());
 
-        Note savedNote = noteService.save(newNote);
+        NoteDTO savedNote = noteService.save(newNote);
 
         assertNotNull(savedNote.getCreatedAt());
     }

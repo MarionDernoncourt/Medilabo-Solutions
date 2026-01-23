@@ -1,5 +1,6 @@
 package com.medilabo.ms_notes.controller;
 
+import com.medilabo.ms_notes.dto.NoteDTO;
 import com.medilabo.ms_notes.entity.Note;
 import com.medilabo.ms_notes.service.INoteService;
 import feign.Response;
@@ -26,18 +27,18 @@ public class NotesController {
     }
 
     @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<Note>> getNotesByPatientId(@PathVariable("patientId") Integer patientId){
+    public ResponseEntity<List<NoteDTO>> getNotesByPatientId(@PathVariable("patientId") Integer patientId){
         logger.info("GET /notes/patient/{} : Request received for patient: {}", patientId, patientId);
-        List<Note> notes = noteService.getNotesByPatientId(patientId);
+        List<NoteDTO> notes = noteService.getNotesByPatientId(patientId);
 
         logger.info("Response received : 200 OK : The patient has {} notes", notes.size());
         return ResponseEntity.status(HttpStatus.OK).body(notes);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Note> saveNote(@Valid @RequestBody Note note){
+    public ResponseEntity<NoteDTO> saveNote(@Valid @RequestBody NoteDTO note){
         logger.info("POST /notes/add request received for patient: {}", note.getPatientId());
-        Note newNote = noteService.save(note);
+        NoteDTO newNote = noteService.save(note);
         logger.info("Response received : 201 CREATED: The note has been add to the patient {}.", newNote.getPatientId());
         return ResponseEntity.status(HttpStatus.CREATED).body(newNote);
         }

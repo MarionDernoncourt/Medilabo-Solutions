@@ -1,6 +1,6 @@
 package com.medilabo.ms_notes.service;
 
-import com.medilabo.ms_notes.dto.PatientDTO;
+import com.medilabo.ms_notes.dto.NoteDTO;
 import com.medilabo.ms_notes.entity.Note;
 import com.medilabo.ms_notes.exceptions.PatientNotFoundException;
 import com.medilabo.ms_notes.exceptions.PatientServiceException;
@@ -39,7 +39,7 @@ public class NoteServiceImpl implements INoteService {
     }
 
     @Override
-    public List<Note> getNotesByPatientId(Integer patientId) {
+    public List<NoteDTO> getNotesByPatientId(Integer patientId) {
         logger.debug("Trying to get Notes for patient with id: " + patientId);
        validatePatientExists(patientId);
         List<Note> notes =  noteRepository.findNotesByPatientId(patientId);
@@ -47,15 +47,35 @@ public class NoteServiceImpl implements INoteService {
             logger.warn("Not notes found for this patient.");
             return Collections.emptyList();
         }
-        return notes;
+        return notes.stream().map(this::mapToDTO).toList();
     }
 
     @Override
-    public Note save(Note note) {
+    public NoteDTO save(NoteDTO note) {
         logger.debug("Trying to save new note for patient: {}", note.getPatientId());
         validatePatientExists(note.getPatientId());
-        Note savedNote= noteRepository.save(note);
+        Note noteToSaved = mapToEntity(note);
+        Note savedNote= noteRepository.save(noteToSaved);
         logger.info("Note saved with id: {} ", savedNote.getId());
-        return savedNote;
+        return mapToDTO(savedNote);
+    }
+
+    // Convertit une Entité Note en NoteDTO
+    private NoteDTO mapToDTO(Note note) {
+        NoteDTO dto = new NoteDTO();
+        dto.setId(note.getId());
+        dto.setPatientId(note.getPatientId());
+        dto.setNote(note.getNote());
+        dto.setCreatedAt(note.getCreatedAt());
+        return dto;
+    }
+
+    // Convertit un NoteDTO en Entité Note
+    private Note mapToEntity(NoteDTO dto) {
+        Note entity = new Note();
+        entity.setId(dto.getId());
+        entity.setPatientId(dto.getPatientId());
+        entity.setNote(dto.getNote());
+        return entity;
     }
 }

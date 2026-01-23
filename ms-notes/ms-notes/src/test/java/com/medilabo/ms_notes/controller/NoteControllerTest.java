@@ -1,6 +1,7 @@
 package com.medilabo.ms_notes.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.medilabo.ms_notes.dto.NoteDTO;
 import com.medilabo.ms_notes.entity.Note;
 import com.medilabo.ms_notes.exceptions.PatientNotFoundException;
 import com.medilabo.ms_notes.exceptions.PatientServiceException;
@@ -12,12 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,11 +33,11 @@ public class NoteControllerTest {
     @MockitoBean
     private NoteServiceImpl noteService;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     public void getNotesByPatientId_shouldReturn200OK() throws Exception {
-        Note newNote = new Note();
+        NoteDTO newNote = new NoteDTO();
         newNote.setPatientId(1);
         newNote.setNote("Test for new note");
 
@@ -78,13 +77,13 @@ public class NoteControllerTest {
 
     @Test
     public void saveNote_shouldReturn200_OK() throws Exception {
-        Note newNote = new Note();
+        NoteDTO newNote = new NoteDTO();
         newNote.setPatientId(1);
         newNote.setNote("Test for new note");
 
         String jsonNote = objectMapper.writeValueAsString(newNote);
 
-        when(noteService.save(any(Note.class))).thenReturn(newNote);
+        when(noteService.save(any(NoteDTO.class))).thenReturn(newNote);
 
         mockMvc.perform(post("/notes/add")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -101,7 +100,7 @@ public class NoteControllerTest {
 
         String jsonNote = objectMapper.writeValueAsString(newNote);
 
-        when(noteService.save(any(Note.class))).thenThrow(new PatientNotFoundException("Erreur interne"));
+        when(noteService.save(any(NoteDTO.class))).thenThrow(new PatientNotFoundException("Erreur interne"));
 
         mockMvc.perform(post("/notes/add").contentType(MediaType.APPLICATION_JSON).content(jsonNote))
                 .andExpect(status().isNotFound())
@@ -116,7 +115,7 @@ public class NoteControllerTest {
 
         String jsonNote = objectMapper.writeValueAsString(newNote);
 
-        when(noteService.save(any(Note.class))).thenThrow(new PatientServiceException("Erreur de communication avec le service"));
+        when(noteService.save(any(NoteDTO.class))).thenThrow(new PatientServiceException("Erreur de communication avec le service"));
 
         mockMvc.perform(post("/notes/add").contentType(MediaType.APPLICATION_JSON).content(jsonNote))
                 .andExpect(status().isServiceUnavailable())
@@ -125,7 +124,7 @@ public class NoteControllerTest {
 
     @Test
     public void saveNote_shouldReturn400_BADREQUEST() throws Exception {
-        Note newNote = new Note();
+        NoteDTO newNote = new NoteDTO();
         newNote.setPatientId(1);
         newNote.setNote("");
 
@@ -140,13 +139,13 @@ public class NoteControllerTest {
 
     @Test
     public void saveNote_shouldReturn500_INTERNALERRORSERVICE() throws Exception {
-        Note newNote = new Note();
+        NoteDTO newNote = new NoteDTO();
         newNote.setPatientId(1);
         newNote.setNote("Test for new note");
 
         String jsonNote = objectMapper.writeValueAsString(newNote);
 
-        when(noteService.save(any(Note.class))).thenThrow(new RuntimeException("Erreur interne"));
+        when(noteService.save(any(NoteDTO.class))).thenThrow(new RuntimeException("Erreur interne"));
 
         mockMvc.perform(post("/notes/add").contentType(MediaType.APPLICATION_JSON).content(jsonNote))
                 .andExpect(status().isInternalServerError())
