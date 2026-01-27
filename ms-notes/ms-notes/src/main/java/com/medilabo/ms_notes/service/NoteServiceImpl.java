@@ -42,7 +42,7 @@ public class NoteServiceImpl implements INoteService {
     public List<NoteDTO> getNotesByPatientId(Integer patientId) {
         logger.debug("Trying to get Notes for patient with id: " + patientId);
        validatePatientExists(patientId);
-        List<Note> notes =  noteRepository.findNotesByPatientId(patientId);
+        List<Note> notes =  noteRepository.findByPatientIdOrderByCreatedAtDesc(patientId);
         if(notes.isEmpty()){
             logger.warn("Not notes found for this patient.");
             return Collections.emptyList();
