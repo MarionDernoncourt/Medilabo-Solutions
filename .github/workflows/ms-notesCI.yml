@@ -11,10 +11,17 @@ jobs:
     name: Build, Test
     runs-on: ubuntu-latest
 
+    # Ce bloc service est au même niveau que 'steps'
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+
     steps:
     # 1️⃣ Récupération du code du repo
     - name: Checkout repository
-      uses: actions/checkout@v4 # 
+      uses: actions/checkout@v4
 
     # 2️⃣ Configuration de Java 21 (Temurin)
     - name: Set up JDK 21
@@ -24,8 +31,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
         
-    # 3️⃣ Compilation et Tests (mvn package exécute les tests)
+    # 3️⃣ Compilation et Tests
     - name: Build and run tests with Maven
       working-directory: ms-notes/ms-notes
-
-      run:  mvn -B package -X
+      run: mvn -B package
