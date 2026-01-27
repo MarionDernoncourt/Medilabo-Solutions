@@ -20,9 +20,9 @@ public class NoteServiceImpl implements INoteService {
     private static final Logger logger = LoggerFactory.getLogger(NoteServiceImpl.class);
 
     @Autowired
-    private INoteRepository noteRepository;
+    private final INoteRepository noteRepository;
     @Autowired
-    private IPatientProxy patientProxy;
+    private final IPatientProxy patientProxy;
 
     public NoteServiceImpl(INoteRepository noteRepository, IPatientProxy patientProxy) {
         this.noteRepository = noteRepository;
