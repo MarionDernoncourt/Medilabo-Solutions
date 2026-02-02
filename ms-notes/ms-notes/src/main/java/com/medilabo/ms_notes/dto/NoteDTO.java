@@ -16,7 +16,7 @@ public class NoteDTO {
 
     private String id;
 
-    @NotNull(message = "Le patientId est obligatoire")
+    @NotNull(message = "Merci de renseigner un patientId existant.")
     private Integer patientId;
 
     @NotBlank(message = "Le contenu de la note ne peut pas être vide")

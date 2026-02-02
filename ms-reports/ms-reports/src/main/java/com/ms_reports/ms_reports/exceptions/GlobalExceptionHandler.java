@@ -1,10 +1,10 @@
-package com.medilabo.ms_notes.exceptions;
+package com.ms_reports.ms_reports.exceptions;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PatientNotFoundException.class)
     public ResponseEntity<Map<String, String>> handlePatientNotFound(PatientNotFoundException ex) {
-        logger.error("Patient not found: {}", ex.getMessage());
+        logger.warn("Patient not found: {}", ex.getMessage());
         Map<String, String> error = new HashMap<>();
         error.put("message", ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
@@ -32,12 +32,20 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error ->
-                errors.put("message", error.getDefaultMessage()));
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(NoteNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleNoteNotFound(NoteNotFoundException ex) {
+        logger.error("Note not found: {}", ex.getMessage());
+        Map<String, String> error = new HashMap<>();
+        error.put("message", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NoteServiceException.class)
+    public ResponseEntity<Map<String, String>> handleNoteService(NoteServiceException ex) {
+    logger.error("Communication error with MS-NOTE: {}", ex.getMessage());
+    Map<String, String> error = new HashMap<>();
+        error.put("message", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     @ExceptionHandler(Exception.class)
@@ -47,4 +55,5 @@ public class GlobalExceptionHandler {
         error.put("message", ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }
