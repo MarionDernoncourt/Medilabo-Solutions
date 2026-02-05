@@ -7,6 +7,7 @@ import com.medilabo.ms_notes.exceptions.PatientNotFoundException;
 import com.medilabo.ms_notes.exceptions.PatientServiceException;
 import com.medilabo.ms_notes.proxies.IPatientProxy;
 import com.medilabo.ms_notes.repository.INoteRepository;
+import feign.FeignException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,6 +53,7 @@ public class NoteServiceIntegrationTest {
 
     @Test
     public void getNotesTest() {
+        when(patientProxy.getPatientById(99)).thenReturn(new PatientDTO());
         List<NoteDTO> notes = noteService.getNotesByPatientId(99);
         assertEquals(1, notes.size());
         assertEquals(referenceNote.getNote(), notes.get(0).getNote());
@@ -60,18 +62,21 @@ public class NoteServiceIntegrationTest {
 
     @Test
     public void getNotesTest_WhenPatientIsNotFound() {
-        when(patientProxy.getPatientById(any(Integer.class))).thenThrow(new PatientNotFoundException("Patient not found with id: " + 99));
+        when(patientProxy.getPatientById(any(Integer.class)))
+                .thenThrow(feign.FeignException.NotFound.class);
+
         assertThrows(PatientNotFoundException.class, () -> noteService.getNotesByPatientId(1));
     }
-
     @Test
     public void getNotesTest_WhenPatientServiceIsUnavailable() {
-        when(patientProxy.getPatientById(any(Integer.class))).thenThrow(new PatientServiceException("Erreur de communication avec le service"));
+        when(patientProxy.getPatientById(any(Integer.class))).thenThrow(feign.FeignException.InternalServerError.class);
         assertThrows(PatientServiceException.class, () -> noteService.getNotesByPatientId(99));
     }
 
     @Test
     public void saveNotesTest_WhenSuccess() {
+        when(patientProxy.getPatientById(any(Integer.class))).thenReturn(new PatientDTO());
+
         NoteDTO newNote = new NoteDTO();
         newNote.setPatientId(99);
         newNote.setNote("Ma 2eme note");
@@ -90,7 +95,7 @@ public class NoteServiceIntegrationTest {
         newNote.setPatientId(12);
         newNote.setNote("Ma 2eme note");
 
-        when(patientProxy.getPatientById(any(Integer.class))).thenThrow(new PatientNotFoundException("Patient not found"));
+        when(patientProxy.getPatientById(any(Integer.class))).thenThrow(feign.FeignException.NotFound.class);
 
         assertThrows(PatientNotFoundException.class, () -> noteService.save(newNote));
     }
@@ -101,7 +106,7 @@ public class NoteServiceIntegrationTest {
         newNote.setPatientId(12);
         newNote.setNote("Ma 2eme note");
 
-        when(patientProxy.getPatientById(any(Integer.class))).thenThrow(new PatientServiceException("Erreur de communication avec le service"));
+        when(patientProxy.getPatientById(any(Integer.class))).thenThrow(feign.FeignException.ServiceUnavailable.class);
 
         assertThrows(PatientServiceException.class, () -> noteService.save(newNote));
     }

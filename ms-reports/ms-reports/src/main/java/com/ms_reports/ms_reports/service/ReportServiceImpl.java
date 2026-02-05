@@ -95,6 +95,7 @@ public class ReportServiceImpl implements IReportService {
                 .map(note -> MedicalUtils.simplifyText(note.getNote()))
                 .collect(Collectors.joining(" "));
 
+        System.out.println(allNotesCleaned);
         // Filtre les TRIGGERS en nettoyant chaque trigger de la liste
         long triggersCount = TRIGGERS.stream()
                 .filter(trigger -> allNotesCleaned.contains(MedicalUtils.simplifyText(trigger)))

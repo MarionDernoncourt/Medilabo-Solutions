@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+
 @Service
 public class NoteServiceImpl implements INoteService {
 
@@ -26,11 +27,13 @@ public class NoteServiceImpl implements INoteService {
         this.noteRepository = noteRepository;
         this.patientProxy = patientProxy;
     }
-    private void validatePatientExists(Integer patientId) {
+
+    private boolean validateIfPatientExist(Integer patientId) {
         try {
             patientProxy.getPatientById(patientId);
+            return true;
         } catch (FeignException.NotFound e) {
-            throw new PatientNotFoundException("Aucun patient trouvé avec cet id : " + patientId);
+            return false;
         } catch (FeignException e) {
             throw new PatientServiceException("Erreur de communication entre les différents services");
         }
@@ -39,9 +42,11 @@ public class NoteServiceImpl implements INoteService {
     @Override
     public List<NoteDTO> getNotesByPatientId(Integer patientId) {
         logger.debug("Trying to get Notes for patient with id: " + patientId);
-       validatePatientExists(patientId);
-        List<Note> notes =  noteRepository.findByPatientIdOrderByCreatedAtDesc(patientId);
-        if(notes.isEmpty()){
+        if(!validateIfPatientExist(patientId)) {
+            throw new PatientNotFoundException("Patient inexistant");
+        }
+        List<Note> notes = noteRepository.findByPatientIdOrderByCreatedAtDesc(patientId);
+        if (notes.isEmpty()) {
             logger.warn("Not notes found for this patient.");
             return Collections.emptyList();
         }
@@ -51,9 +56,10 @@ public class NoteServiceImpl implements INoteService {
     @Override
     public NoteDTO save(NoteDTO note) {
         logger.debug("Trying to save new note for patient: {}", note.getPatientId());
-        validatePatientExists(note.getPatientId());
-        Note noteToSaved = mapToEntity(note);
-        Note savedNote= noteRepository.save(noteToSaved);
+        if(!validateIfPatientExist(note.getPatientId())) {
+            throw new PatientNotFoundException("Patient inexistant");
+        }        Note noteToSaved = mapToEntity(note);
+        Note savedNote = noteRepository.save(noteToSaved);
         logger.info("Note saved with id: {} ", savedNote.getId());
         return mapToDTO(savedNote);
     }
