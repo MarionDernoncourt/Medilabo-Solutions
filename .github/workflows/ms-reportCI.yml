@@ -28,4 +28,4 @@ jobs:
     - name: Build and run tests with Maven
       working-directory: ms-report/ms-report
 
-      run:  mvn -B package -X
+      run:  mvn -B clean verify
