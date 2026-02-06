@@ -26,6 +26,6 @@ jobs:
         
     # 3️⃣ Compilation et Tests (mvn package exécute les tests)
     - name: Build and run tests with Maven
-      working-directory: ms-report/ms-report
+      working-directory: ms-reports/ms-reports
 
       run:  mvn -B clean verify
