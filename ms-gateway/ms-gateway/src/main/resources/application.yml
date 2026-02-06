@@ -20,6 +20,7 @@ spring:
         locator:
           enabled: true
       routes:
+        #   ROUTE SERVICE PATIENT
         - id: patient-service-route
           uri: lb://MS-PATIENT
           predicates:
@@ -32,13 +33,7 @@ spring:
             # 🔑 On ajoute notre secret (en utilisant la variable du haut)
             - AddRequestHeader=${medilabo.security.internal-header}, ${medilabo.security.internal-secret}
 
-        - id: auth-route
-          uri: lb://MS-PATIENT
-          predicates:
-            - Path=/api/auth/**
-          filters:
-            # ✅ Correction de l'anti-slash ici
-            - RewritePath=/api/(?<segment>.*), /${segment}
+       # ROUTE SERVICE NOTES
         - id: notes-service-route
           uri: lb://MS-NOTES
           predicates:
@@ -49,3 +44,16 @@ spring:
             - RemoveRequestHeader=${medilabo.security.internal-header}
             # 🔑 On ajoute notre secret (en utilisant la variable du haut)
             - AddRequestHeader=${medilabo.security.internal-header}, ${medilabo.security.internal-secret}
+
+      # ROUTE SERVICE REPORTS
+        - id: report-service-route
+          uri: lb://MS-REPORTS
+          predicates:
+            - Path=/api/report/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /${segment}
+            # 🛡️ Sécurité : on nettoie ce qui vient de l'extérieur
+            - RemoveRequestHeader=${medilabo.security.internal-header}
+            # 🔑 On ajoute notre secret (en utilisant la variable du haut)
+            - AddRequestHeader=${medilabo.security.internal-header}, ${medilabo.security.internal-secret}
+

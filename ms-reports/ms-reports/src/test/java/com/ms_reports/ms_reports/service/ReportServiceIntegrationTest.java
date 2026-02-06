@@ -42,7 +42,7 @@ public class ReportServiceIntegrationTest {
 
         RiskLevel risk = reportService.calculateRisk(TEST_ID);
 
-        assertEquals("None",  risk.getLabel());
+        assertEquals("Aucun",  risk.getLabel());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class ReportServiceIntegrationTest {
 
         RiskLevel risk = reportService.calculateRisk(TEST_ID);
 
-        assertEquals("Borderline",  risk.getLabel());
+        assertEquals("Risque limité",  risk.getLabel());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class ReportServiceIntegrationTest {
 
         RiskLevel risk = reportService.calculateRisk(TEST_ID);
 
-        assertEquals("In Danger",  risk.getLabel());
+        assertEquals("En danger",  risk.getLabel());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class ReportServiceIntegrationTest {
 
         RiskLevel risk = reportService.calculateRisk(TEST_ID);
 
-        assertEquals("In Danger",  risk.getLabel());
+        assertEquals("En danger",  risk.getLabel());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class ReportServiceIntegrationTest {
 
         RiskLevel risk = reportService.calculateRisk(TEST_ID);
 
-        assertEquals("Early onset",  risk.getLabel());
+        assertEquals("Apparition précoce",  risk.getLabel());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class ReportServiceIntegrationTest {
 
         RiskLevel risk = reportService.calculateRisk(TEST_ID);
 
-        assertEquals("Early onset",  risk.getLabel());
+        assertEquals("Apparition précoce",  risk.getLabel());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class ReportServiceIntegrationTest {
 
         RiskLevel risk = reportService.calculateRisk(TEST_ID);
 
-        assertEquals("In Danger",  risk.getLabel());
+        assertEquals("En danger",  risk.getLabel());
     }
 
     @Test
@@ -112,7 +112,7 @@ public class ReportServiceIntegrationTest {
 
         RiskLevel risk = reportService.calculateRisk(TEST_ID);
 
-        assertEquals("In Danger",  risk.getLabel());
+        assertEquals("En danger",  risk.getLabel());
     }
 
     @Test
@@ -122,7 +122,7 @@ public class ReportServiceIntegrationTest {
 
         RiskLevel risk = reportService.calculateRisk(TEST_ID);
 
-        assertEquals("In Danger",  risk.getLabel());
+        assertEquals("En danger",  risk.getLabel());
     }
 
     @Test
@@ -132,7 +132,7 @@ public class ReportServiceIntegrationTest {
 
         RiskLevel risk = reportService.calculateRisk(TEST_ID);
 
-        assertEquals("In Danger",  risk.getLabel());
+        assertEquals("En danger",  risk.getLabel());
     }
 
     @Test
@@ -142,7 +142,7 @@ public class ReportServiceIntegrationTest {
 
         RiskLevel risk = reportService.calculateRisk(TEST_ID);
 
-        assertEquals("Borderline",  risk.getLabel());
+        assertEquals("Risque limité",  risk.getLabel());
     }
 
     @Test
@@ -152,7 +152,7 @@ public class ReportServiceIntegrationTest {
 
         RiskLevel risk = reportService.calculateRisk(TEST_ID);
 
-        assertEquals("Not defined",  risk.getLabel());
+        assertEquals("Indéterminé",  risk.getLabel());
     }
 
     @Test

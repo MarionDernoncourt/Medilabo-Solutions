@@ -7,18 +7,11 @@ import com.ms_reports.ms_reports.exceptions.NoteServiceException;
 import com.ms_reports.ms_reports.exceptions.PatientNotFoundException;
 import com.ms_reports.ms_reports.exceptions.PatientServiceException;
 import com.ms_reports.ms_reports.service.IReportService;
-import com.ms_reports.ms_reports.service.ReportServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -44,7 +37,7 @@ class ReportControllerTest {
 
         mockMvc.perform(get("/report/patient/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("None"));
+                .andExpect(content().string("Aucun"));
             }
 
     @Test
@@ -53,7 +46,7 @@ class ReportControllerTest {
 
         mockMvc.perform(get("/report/patient/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Not defined"));
+                .andExpect(content().string("Indéterminé"));
     }
     @Test
     public void getReportByPatientIdTest_WhenReturn_BORDERLINE() throws Exception {
@@ -61,7 +54,7 @@ class ReportControllerTest {
 
         mockMvc.perform(get("/report/patient/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Borderline"));
+                .andExpect(content().string("Risque limité"));
     }
     @Test
     public void getReportByPatientIdTest_WhenReturn_IN_DANGER() throws Exception {
@@ -69,7 +62,7 @@ class ReportControllerTest {
 
         mockMvc.perform(get("/report/patient/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("In Danger"));
+                .andExpect(content().string("En danger"));
     }
     @Test
     public void getReportByPatientIdTest_WhenReturn_EARLY_ONSET() throws Exception {
@@ -77,7 +70,7 @@ class ReportControllerTest {
 
         mockMvc.perform(get("/report/patient/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Early onset"));
+                .andExpect(content().string("Apparition précoce"));
     }
 
     @Test

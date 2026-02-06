@@ -16,7 +16,12 @@
           </template>
         </div>
       </div>
-
+      <div class="risk-badge-container">
+        <span class="risk-label">État de santé :</span>
+        <span :class="['risk-badge', getRiskClass(riskLevel)]">
+          {{ riskLevel || 'Calcul en cours...' }}
+        </span>
+      </div>
       <div v-if="message" class="message" :class="{ error: isError }">
         {{ message }}
 
@@ -57,7 +62,7 @@
                 <div class="input-container">
                   <span v-if="!isEditing">{{ patient.birthdate }}</span>
                   <template v-else>
-                    <input v-model="editablePatient.birthdate" class="edit-input"
+                    <input type="date" v-model="editablePatient.birthdate" class="edit-input"
                       :class="{ 'input-error': errors.birthdate }" />
                     <span v-if="errors.birthdate" class="error-text">{{ errors.birthdate }}</span>
                   </template>
@@ -109,7 +114,7 @@
           <button class="btn-addNote" @click="addNote">Ajouter une note</button>
         </div>
       </div>
-      <div v-if="noteMessage" class="message" :class="{ error: isError }">
+      <div v-if="noteMessage" class="message" :class="{ error: isError, success: !isError }">
         {{ noteMessage }}
 
       </div>
@@ -160,6 +165,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import PatientService from '../services/PatientService';
 import NoteService from '@/services/NoteService';
+import ReportService from '@/services/ReportService';
 
 //CONFIGURATION ROUTE
 const route = useRoute();
@@ -174,6 +180,9 @@ const message = ref("");
 const isError = ref(false);
 const errors = ref({});
 
+//ETATS DE RISQUE
+const riskLevel = ref("");
+
 //ÉTATS DES NOTES
 const notes = ref([]);
 const isAddingNote = ref(false);
@@ -184,6 +193,7 @@ const noteMessage = ref("");
 onMounted(() => {
   loadPatient();
   loadNotes();
+  loadReport();
 });
 
 //LOGIQUE PATIENT
@@ -217,6 +227,7 @@ const savePatient = async () => {
     isError.value = false;
     message.value = "Profil mis à jour avec succès";
     stopEdit();
+    loadReport();
   } catch (error) {
     isError.value = true;
     if (error.response && error.response.status === 400) {
@@ -274,9 +285,13 @@ const saveNote = async () => {
 
     // Rafraîchir la liste
     await loadNotes();
+    // Rafraichir niveau de risque
+    await loadReport();
 
+    isError.value = false; 
     noteMessage.value = "Note ajoutée avec succès !";
-    setTimeout(() => { noteMessage.value = ""; }, 3000);
+
+    setTimeout(() => { noteMessage.value = ""; }, 1500);
 
   } catch (error) {
     console.error("Erreur lors de l'ajout de la note:", error);
@@ -284,7 +299,32 @@ const saveNote = async () => {
   }
 };
 
+// LOGIQUE EVALUATION RISQUE 
+const loadReport = async () => {
+  try {
+    const riskResult = await ReportService.getReportByPatientId(id);
+    riskLevel.value = riskResult.data;
+  } catch (error) {
+    console.error("Erreur lors du chargement du risque", error);
+    riskLevel.value = "";
+  }
+}
+
 //UTILITAIRES
+
+const getRiskClass = (riskLevel) => {
+  if (!riskLevel) return '';
+  const r = riskLevel.toLowerCase();
+  
+  if (r.includes('aucun')) return 'risk-none';
+  if (r.includes('indéterminé')) return 'risk-na';
+  if (r.includes('risque limité')) return 'risk-borderline';
+  if (r.includes('en danger')) return 'risk-danger';
+  if (r.includes('apparition précoce')) return 'risk-critical';
+  
+  return '';
+};
+
 const formatDate = (dateString) => {
   if (!dateString) return "Date inconnue";
   const date = new Date(dateString);
@@ -395,9 +435,17 @@ const formatDate = (dateString) => {
   border-radius: 8px;
   margin-bottom: 20px;
   font-weight: bold;
+}
+.message.error {
   color: #ff6b7f;
   border: 1px solid #ff6b7f;
   background-color: #fff5f6;
+}
+
+.message.success {
+  color: #27ae60;
+  border: 1px solid #27ae60;
+  background-color: #ebfaf0;
 }
 
 .error-list {
@@ -478,5 +526,46 @@ textarea.edit-input {
   resize: vertical;
   min-height: 60px;
   font-family: inherit;
+}
+
+.risk-badge-container {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.risk-label {
+  font-weight: bold;
+  color: #34495e;
+}
+
+.risk-badge {
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: none;
+}
+
+/* Vert - Aucun risque */
+.risk-none { background-color: #27ae60; color: white; }
+
+/* Gris/Vert pâle - Non applicable */
+.risk-na { background-color: #27ae60; color: white; }
+
+/* Orange - Risque limité */
+.risk-borderline { background-color: orange; color: white; }
+
+/* Rouge - Danger */
+.risk-danger { background-color: red; color: white; }
+
+/* Violet Foncé ou Bordeaux - Critique (Early Onset) */
+.risk-critical { 
+  background-color: #8e44ad; /* Violet */
+  color: white;
+  border: 2px solid #2c3e50; /* Petit contour pour accentuer l'importance */
 }
 </style>

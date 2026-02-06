@@ -2,11 +2,11 @@ package com.ms_reports.ms_reports.entity;
 
 public enum RiskLevel {
 
-    NONE("None"),
-    BORDERLINE("Borderline"),
-    IN_DANGER("In Danger"),
-    EARLY_ONSET("Early onset"),
-    NOT_APPLICABLE("Not defined");
+    NONE("Aucun"),
+    BORDERLINE("Risque limité"),
+    IN_DANGER("En danger"),
+    EARLY_ONSET("Apparition précoce"),
+    NOT_APPLICABLE("Indéterminé");
 
     private final String label;
 
