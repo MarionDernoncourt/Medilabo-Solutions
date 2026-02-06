@@ -1,0 +1,31 @@
+name: Microservice Report - CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  ci:
+    name: Build, Test
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1️⃣ Récupération du code du repo
+    - name: Checkout repository
+      uses: actions/checkout@v4 
+
+    # 2️⃣ Configuration de Java 21 (Temurin)
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+        
+    # 3️⃣ Compilation et Tests (mvn package exécute les tests)
+    - name: Build and run tests with Maven
+      working-directory: ms-report/ms-report
+
+      run:  mvn -B package -X
