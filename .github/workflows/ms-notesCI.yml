@@ -34,4 +34,4 @@ jobs:
     # 3️⃣ Compilation et Tests
     - name: Build and run tests with Maven
       working-directory: ms-notes/ms-notes
-      run: mvn -B package
+      run: mvn -B clean verify
