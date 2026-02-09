@@ -4,14 +4,14 @@ server:
 
 medilabo:
   security:
-    internal-header: "X-Internal-Secret"
-    internal-secret: "MonSecretSecurise123!"
+    internal-header: ${INTERNAL_HEADER_NAME:X-Internal-Secret}
+    internal-secret: ${INTERNAL_SECRET_VALUE:MonSecretSecurise123!}
 
 spring:
   security:
     user:
-      name: "authorized-client"
-      password: "SuperSecretPassword2025!"
+      name: ${GATEWAY_USER:authorized-client}
+      password: ${GATEWAY_PASSWORD:SuperSecretPassword2025!}
   application:
     name: ms-gateway
   cloud:
@@ -57,3 +57,9 @@ spring:
             # 🔑 On ajoute notre secret (en utilisant la variable du haut)
             - AddRequestHeader=${medilabo.security.internal-header}, ${medilabo.security.internal-secret}
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_HOST:localhost}:8761/eureka/
+  instance:
+    prefer-ip-address: true

@@ -6,6 +6,7 @@ target/
 *.zip
 *.tar.gz
 *.rar
+.env
 
 # --- Maven ---
 .mvn/

@@ -71,9 +71,7 @@ public class ReportServiceImpl implements IReportService {
     public RiskLevel calculateRisk(Integer patientId) {
         logger.debug("Trying to calculate Risk level for patient with id : " + patientId);
         PatientDTO patient = getPatientById(patientId);
-        System.out.println("Patient : " + patient);
         List<NoteDTO> notes = getNotesByPatientId(patientId);
-        System.out.println("notes : " + notes);
 
         boolean patientMoreThan30 = MedicalUtils.patientIs30OrMore(patient.getBirthdate());
         String gender = patient.getGenre();
@@ -125,6 +123,6 @@ public class ReportServiceImpl implements IReportService {
     if(triggers == 0) {
         return RiskLevel.NONE;
     }
-     return RiskLevel.NOT_APPLICABLE;
+     return RiskLevel.NONE;
     }
 }

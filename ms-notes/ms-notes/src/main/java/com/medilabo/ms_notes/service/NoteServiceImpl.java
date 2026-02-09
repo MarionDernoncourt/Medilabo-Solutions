@@ -32,9 +32,7 @@ public class NoteServiceImpl implements INoteService {
         try {
             patientProxy.getPatientById(patientId);
             return true;
-        } catch (FeignException.NotFound e) {
-            return false;
-        } catch (FeignException e) {
+        }  catch (FeignException e) {
             throw new PatientServiceException("Erreur de communication entre les différents services");
         }
     }
