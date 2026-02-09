@@ -33,6 +33,11 @@ public class NoteServiceImpl implements INoteService {
             patientProxy.getPatientById(patientId);
             return true;
         }  catch (FeignException e) {
+            System.out.println("erreur : " + e.status());
+            if(e.status() == 404) {
+                logger.warn("Patient with id: " + patientId + " not found");
+                throw new PatientNotFoundException("Patient inexistant avec l'id : " +  patientId);
+            }
             throw new PatientServiceException("Erreur de communication entre les différents services");
         }
     }

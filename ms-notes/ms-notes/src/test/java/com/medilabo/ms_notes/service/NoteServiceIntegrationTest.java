@@ -7,7 +7,6 @@ import com.medilabo.ms_notes.exceptions.PatientNotFoundException;
 import com.medilabo.ms_notes.exceptions.PatientServiceException;
 import com.medilabo.ms_notes.proxies.IPatientProxy;
 import com.medilabo.ms_notes.repository.INoteRepository;
-import feign.FeignException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,11 +61,12 @@ public class NoteServiceIntegrationTest {
 
     @Test
     public void getNotesTest_WhenPatientIsNotFound() {
-        when(patientProxy.getPatientById(any(Integer.class)))
-                .thenThrow(feign.FeignException.NotFound.class);
+
+        when(patientProxy.getPatientById(any(Integer.class))).thenThrow(createFeign404());
 
         assertThrows(PatientNotFoundException.class, () -> noteService.getNotesByPatientId(1));
     }
+
     @Test
     public void getNotesTest_WhenPatientServiceIsUnavailable() {
         when(patientProxy.getPatientById(any(Integer.class))).thenThrow(feign.FeignException.InternalServerError.class);
@@ -95,7 +95,7 @@ public class NoteServiceIntegrationTest {
         newNote.setPatientId(12);
         newNote.setNote("Ma 2eme note");
 
-        when(patientProxy.getPatientById(any(Integer.class))).thenThrow(feign.FeignException.NotFound.class);
+        when(patientProxy.getPatientById(any(Integer.class))).thenThrow(createFeign404());
 
         assertThrows(PatientNotFoundException.class, () -> noteService.save(newNote));
     }
@@ -123,5 +123,23 @@ public class NoteServiceIntegrationTest {
         assertNotNull(savedNote.getCreatedAt());
     }
 
+    // HELPERS
+    private feign.FeignException.NotFound createFeign404() {
+        // On force l'utilisation de la version avec RequestTemplate
+        feign.Request request = feign.Request.create(
+                feign.Request.HttpMethod.GET,
+                "/api/patient",
+                new java.util.HashMap<>(),
+                (byte[]) null, // tableau de bytes nul
+                (java.nio.charset.Charset) null //  Charset nul
+        );
+
+        return new feign.FeignException.NotFound(
+                "Patient non trouvé",
+                request,
+                new byte[0],
+                null
+        );
+    }
 
 }

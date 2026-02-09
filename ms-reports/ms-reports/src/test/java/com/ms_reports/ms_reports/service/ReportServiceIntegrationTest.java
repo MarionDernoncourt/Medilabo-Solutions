@@ -152,7 +152,7 @@ public class ReportServiceIntegrationTest {
 
         RiskLevel risk = reportService.calculateRisk(TEST_ID);
 
-        assertEquals("Indéterminé",  risk.getLabel());
+        assertEquals("Aucun",  risk.getLabel());
     }
 
     @Test

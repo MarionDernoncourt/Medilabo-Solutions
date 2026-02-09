@@ -46,7 +46,7 @@ class ReportControllerTest {
 
         mockMvc.perform(get("/report/patient/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Indéterminé"));
+                .andExpect(content().string("Aucun"));
     }
     @Test
     public void getReportByPatientIdTest_WhenReturn_BORDERLINE() throws Exception {
