@@ -36,7 +36,7 @@ Une fois le backend compilé et le frontend préparé, lancez l'infrastructure c
 ## Initialisation des données
 L'application est configurée pour être opérationnelle dès le premier lancement grâce à un système d'initialisation automatique :
 - MySQL (ms-patient) : La base de données est peuplée via le script data.sql.
-Note technique : **Afin de garantir un jeu de données intègre à chaque démarrage en environnement de développement, une commande <DELETE> est exécutée avant l'insertion. Cette commande doit être retirée ou commentée pour un passage en production afin de garantir la persistance des données.**
+Note technique : **Afin de garantir un jeu de données intègre à chaque démarrage en environnement de développement, une commande `DELETE` est exécutée avant l'insertion. Cette commande doit être retirée ou commentée pour un passage en production afin de garantir la persistance des données.**
 - MongoDB (ms-notes) : Les notes cliniques sont injectées par le DataInitializer Java. Celui-ci vérifie si la base de données est vide avant de générer les notes de test.
 
 ## Tests et Qualité
