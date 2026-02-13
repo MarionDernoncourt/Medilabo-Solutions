@@ -1,0 +1,118 @@
+services:
+  # --- Les bases de données
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    networks:
+      - medilabo-network
+
+  mongo-db:
+    image: mongo:latest
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    networks:
+      - medilabo-network
+
+  # --- Infrastructure
+  eureka-server:
+    build: ./eureka-server/eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - medilabo-network
+
+  # --- Services
+  ms-patient:
+    build: ./ms-patient/ms-patient
+    container_name: ms-patient
+    ports:
+      - "9001:9001"
+    depends_on:
+      - mysql-db
+      - eureka-server
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+
+      - INTERNAL_HEADER_NAME=${INTERNAL_HEADER_NAME}
+      - INTERNAL_SECRET_VALUE=${INTERNAL_SECRET_VALUE}
+    networks:
+      - medilabo-network
+
+  ms-notes:
+    build: ./ms-notes/ms-notes
+    container_name: ms-notes
+    ports:
+      - "9002:9002"
+    depends_on:
+      - mongo-db
+      - eureka-server
+    environment:
+      - SPRING_DATA_MONGODB_HOST=${MONGO_HOST}
+      - SPRING_DATA_MONGODB_PORT=${MONGO_PORT}
+      - SPRING_DATA_MONGODB_DATABASE=${MONGO_DATABASE}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://${EUREKA_HOST}:8761/eureka/
+      - MEDILABO_SECURITY_INTERNAL_HEADER=${INTERNAL_HEADER_NAME}
+      - MEDILABO_SECURITY_INTERNAL_SECRET=${INTERNAL_SECRET_VALUE}
+    networks:
+      - medilabo-network
+
+  ms-reports:
+    build: ./ms-reports/ms-reports
+    container_name: ms-reports
+    ports:
+      - "9003:9003"
+    depends_on:
+      - eureka-server
+      - ms-patient
+      - ms-notes
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://${EUREKA_HOST}:8761/eureka/
+      - MEDILABO_SECURITY_INTERNAL_HEADER=${INTERNAL_HEADER_NAME}
+      - MEDILABO_SECURITY_INTERNAL_SECRET=${INTERNAL_SECRET_VALUE}
+    networks:
+      - medilabo-network
+
+  ms-gateway:
+    build: ./ms-gateway/ms-gateway
+    container_name: ms-gateway
+    ports:
+      - "8088:8088"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://${EUREKA_HOST}:8761/eureka/
+      - MEDILABO_SECURITY_INTERNAL_HEADER=${INTERNAL_HEADER_NAME}
+      - MEDILABO_SECURITY_INTERNAL_SECRET=${INTERNAL_SECRET_VALUE}
+      - SPRING_SECURITY_USER_NAME=${GATEWAY_USER}
+      - SPRING_SECURITY_USER_PASSWORD=${GATEWAY_PASSWORD}
+    networks:
+      - medilabo-network
+
+  medilabo-ui:
+    build: ./medilabo-ui
+    container_name: medilabo-ui
+    ports:
+      - "8080:80"
+    depends_on:
+      - ms-gateway
+    environment:
+      - VITE_API_URL=http://localhost:8088
+      - VITE_GATEWAY_USER=authorized-client
+      - VITE_GATEWAY_PASSWORD=SuperSecretPassword2025!
+    networks:
+      - medilabo-network
+
+networks:
+  medilabo-network:
+    driver: bridge

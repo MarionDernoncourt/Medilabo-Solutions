@@ -1,3 +1,9 @@
+-- ATTENTION : La ligne suivante est utilisée UNIQUEMENT pour le développement
+-- afin de garantir un jeu de données propre à chaque démarrage.
+-- À supprimer/commenter en environnement de production pour préserver la persistance.
+DELETE FROM patient;
+DELETE FROM patient;
+
 INSERT INTO patient (last_name, first_name, birthdate, genre, address, phone_number) VALUES
                                                                                          ('TestNone', 'Test', '1966-12-31', 'FEMININ', '1 Brookside St', '100-222-3333'),
                                                                                          ('TestBorderline', 'Test', '1945-06-24', 'MASCULIN', '2 High St', '200-333-4444'),

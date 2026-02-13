@@ -3,10 +3,6 @@ import axios from "axios";
 // 1. Définition de l'URL
 const API_URL_PATIENT = `${import.meta.env.VITE_API_URL}/api/patient`;
 
-// Les logs (Optionnels, tu pourras les supprimer après)
-console.log("Ma variable API :", import.meta.env.VITE_API_URL);
-console.log("Ma config complète :", import.meta.env);
-
 // 2. Création de l'instance (D'un seul bloc !)
 const apiClient = axios.create({
   baseURL: API_URL_PATIENT,

@@ -6,7 +6,7 @@ public enum RiskLevel {
     BORDERLINE("Risque limité"),
     IN_DANGER("En danger"),
     EARLY_ONSET("Apparition précoce"),
-    NOT_APPLICABLE("Indéterminé");
+    NOT_APPLICABLE("Aucun");
 
     private final String label;
 

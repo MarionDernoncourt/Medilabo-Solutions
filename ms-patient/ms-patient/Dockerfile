@@ -12,8 +12,8 @@ RUN mvn clean package -DskipTests
 # 2 : RUNTIME ---
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
-COPY --from-build /app/target/*.jar app.jar
+COPY --from=build /app/target/*.war app.jar
 
-EXPOSE 8080
+EXPOSE 9001
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
