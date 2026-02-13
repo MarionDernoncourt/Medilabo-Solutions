@@ -2,7 +2,7 @@
 Le projet est une application de santé composée de microservices permettant de gérer les fiches patient, de suivre leurs notes cliniques et de calculer leur niveau de risque de diabète en fonction de déclencheurs spécifiques.
 
 ## Technologies utilisées
-- Backend : Java 21, Spring Boot 3.4.x
+- Backend : Java 21, Spring Boot 3.x
 - Frontend : Vue.js 3
 - Architecture : Microservices avec Spring Cloud (Gateway, Eureka, OpenFeign)
 - Bases de données : MySQL (gestion des informations patient) et MongoDB (gestion des notes cliniques)
