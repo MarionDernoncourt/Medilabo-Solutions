@@ -31,6 +31,7 @@ Modifiez les variables selon votre mode d'exécution :
 | `DB_HOST` | `localhost` | `mysql-db` |
 | `MONGO_HOST` | `localhost` | `mongo-db` |
 | `EUREKA_HOST` | `localhost` | `eureka-server` |
+
 Note IntelliJ : Pour charger ces variables sans Docker, il est recommandé d'utiliser le plugin EnvFile et de l'activer dans la configuration de lancement de chaque microservice en pointant vers ce fichier `.env`
 
 2.Compilation : Générez les fichiers exécutables pour chaque microservice à l'aide de la commande suivante : `mvn clean package -DskipTests`
