@@ -23,7 +23,15 @@ Pré-requis
 - Java 21 et Maven (pour la compilation)
 
 ### Backend (Spring Boot)
-1. Configuration : Après avoir cloné le projet, complétez les variables d'environnement nécessaires en créant le fichier .env à la racine du projet (un modèle est fourni dans le fichier .env.example).
+1. Configuration : Après avoir cloné le projet, créez le fichier .env à la racine du projet (un modèle est fourni dans le fichier .env.example).
+Modifiez les variables selon votre mode d'exécution :
+### ⚙️ Configuration de l'hôte (`.env`)
+| Variable | Local (Sans Docker) | Docker |
+| :--- | :--- | :--- |
+| `DB_HOST` | `localhost` | `mysql-db` |
+| `MONGO_HOST` | `localhost` | `mongo-db` |
+| `EUREKA_HOST` | `localhost` | `eureka-server` |
+Note IntelliJ : Pour charger ces variables sans Docker, il est recommandé d'utiliser le plugin EnvFile et de l'activer dans la configuration de lancement de chaque microservice en pointant vers ce fichier `.env`
 
 2.Compilation : Générez les fichiers exécutables pour chaque microservice à l'aide de la commande suivante : `mvn clean package -DskipTests`
 
