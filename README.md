@@ -62,7 +62,7 @@ Normalisation : La base respecte la 3NF (3ème Forme Normale) pour minimiser la 
 **MongoDB** (ms-notes) : Les notes cliniques sont injectées via un DataInitializer Java qui vérifie l'absence de données avant d'insérer le jeu de test.
 
 **Note pour la Production** : Pour conserver les données, modifiez ddl-auto=update et passez `spring.sql.init.mode=never`. Commentez également les instructions `TRUNCATE` dans le script SQL.
-**Note pour la Production** : Pour désactiver l'injection automatique en production, vous pouvez soit commenter l'annotation `@Component` (ou @Bean) du `DataInitializer`, soit utiliser un **Profile Spring** (ex: `@Profile("!prod")`) pour ne le charger qu'en environnement de développement.
+**Note pour la Production** : Pour désactiver l'injection automatique en production, vous pouvez soit commenter l'annotation `@Configuration` (ou @Bean) du `DataInitializer`, soit utiliser un **Profile Spring** (ex: `@Profile("!prod")`) pour ne le charger qu'en environnement de développement.
 
 ## Securité et communication inter-services
 - **API Gateway** : Seul point d'entrée public de l'application. Les microservices ne sont pas exposés directement.
