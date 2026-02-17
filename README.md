@@ -22,6 +22,8 @@ Pré-requis
 - Docker et Docker Compose
 - Java 21 et Maven (pour la compilation)
 
+Note sur le démarrage : Le projet utilise des Docker Healthchecks. Le microservice ms-patient attendra que la base MySQL soit totalement opérationnelle avant de démarrer pour garantir une connexion stable.
+
 ### Backend (Spring Boot)
 1. Configuration : Après avoir cloné le projet, créez le fichier .env à la racine du projet (un modèle est fourni dans le fichier .env.example).
 Modifiez les variables selon votre mode d'exécution :
@@ -44,19 +46,30 @@ Une fois le backend compilé et le frontend préparé, lancez l'infrastructure c
 
 ## Initialisation des données
 L'application est configurée pour être opérationnelle dès le premier lancement grâce à un système d'initialisation automatique :
-- MySQL (ms-patient) : La base de données est peuplée via le script data.sql.
+- MySQL (ms-patient) : La base de données est peuplée via le script data.sql . La base de données Patient respecte la 3e Forme Normale (3NF) pour optimiser le stockage et garantir l'intégrité des données.
+- MongoDB (ms-notes): La base de données est peuplée via le DataInitializer.
+  
 - ### 🗄️ Gestion de la persistance (MySQL)
-Par défaut, le projet est configuré en mode **"Démo"** pour garantir un état identique à chaque lancement :
-- `spring.jpa.hibernate.ddl-auto=create` : Recrée les tables au démarrage.
-- `spring.sql.init.mode=always` : Injecte les 4 patients de test du fichier `data.sql`.
+L'application est configurée pour être opérationnelle dès le premier lancement (**Mode Démo**) :
 
-**Pour passer en mode "Production" (Persistance réelle) :**
-1. Modifier `spring.jpa.hibernate.ddl-auto=update`.
-2. Passer `spring.sql.init.mode=never` après le premier lancement.
+**MySQL** (ms-patient) :
 
-Note technique : **Afin de garantir un jeu de données intègre à chaque démarrage en environnement de développement, une commande `DELETE` est exécutée avant l'insertion. Cette commande doit être retirée ou commentée pour un passage en production afin de garantir la persistance des données.**
-- MongoDB (ms-notes) : Les notes cliniques sont injectées par le DataInitializer Java. Celui-ci vérifie si la base de données est vide avant de générer les notes de test.
+- `spring.jpa.hibernate.ddl-auto=create` : Les tables sont recréées à chaque démarrage.
 
+- **Synchronisation des IDs** : Le script `data.sql` exécute un `TRUNCATE TABLE` (avec désactivation des `FOREIGN_KEY_CHECKS`). Cela garantit que les IDs patients repartent de *1*, assurant la cohérence avec les références stockées dans MongoDB.
+Normalisation : La base respecte la 3NF (3ème Forme Normale) pour minimiser la redondance.
+
+**MongoDB** (ms-notes) : Les notes cliniques sont injectées via un DataInitializer Java qui vérifie l'absence de données avant d'insérer le jeu de test.
+
+**Note pour la Production** : Pour conserver les données, modifiez ddl-auto=update et passez `spring.sql.init.mode=never`. Commentez également les instructions `TRUNCATE` dans le script SQL.
+**Note pour la Production** : Pour désactiver l'injection automatique en production, vous pouvez soit commenter l'annotation `@Component` (ou @Bean) du `DataInitializer`, soit utiliser un **Profile Spring** (ex: `@Profile("!prod")`) pour ne le charger qu'en environnement de développement.
+
+## Securité et communication inter-services
+- **API Gateway** : Seul point d'entrée public de l'application. Les microservices ne sont pas exposés directement.
+- **Filtrage interne** : Un mécanisme de filtrage basé sur un **Header-Secret**(`X-Internal-Secret`) est implémenté. Toute requête directe vers un microservice qui ne provient pas de la Gateway ou d'un service autorisé est rejetée.
+- **Service Discovery**: Utilisation d'**Eureka** pour une résolution de noms dynamique, évitant les adresses IP codées en dur.
+- **Communication inter-services(OpenFeign**): Le projet utilise **SpringCloud OpenFeign** pour les appels entre microservices. Cela permet une communication **déclarative** (via des interfaces) rendans le code plus lisible et plus facile a maintenir qu'avec un `ResTemplate` classique. Couplé a **Eureka**, OpenFeign utilise le nom des services pour résoudre les adresses automatiquement.
+  
 ## Tests et Qualité
-- Exécution locale : Pour lancer les tests, utilisez la commande mvn test.
-- Intégration continue (CI) : Le projet utilise GitHub Actions. Les tests sont automatiquement exécutés à chaque push sur la branche main pour garantir la stabilité et la non-régression du code.
+- **Exécution locale** : Pour lancer les tests, utilisez la commande `mvn test`.
+- **Intégration continue (CI)** : Le projet utilise GitHub Actions. Les tests sont automatiquement exécutés à chaque push sur la branche `main` pour garantir la stabilité et la non-régression du code.
