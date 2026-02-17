@@ -1,8 +1,14 @@
 -- ATTENTION : La ligne suivante est utilisée UNIQUEMENT pour le développement
 -- afin de garantir un jeu de données propre à chaque démarrage.
 -- À supprimer/commenter en environnement de production pour préserver la persistance.
-DELETE FROM patient;
-DELETE FROM patient;
+-- Desactivation de la sécurité
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- On vide la table et on remet l'ID à 1
+TRUNCATE TABLE patient;
+
+-- On réactive la sécurité
+SET FOREIGN_KEY_CHECKS = 1;
 
 INSERT INTO patient (last_name, first_name, birthdate, genre, address, phone_number) VALUES
                                                                                          ('TestNone', 'Test', '1966-12-31', 'FEMININ', '1 Brookside St', '100-222-3333'),

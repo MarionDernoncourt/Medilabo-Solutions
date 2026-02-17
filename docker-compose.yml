@@ -3,6 +3,11 @@ services:
   mysql-db:
     image: mysql:8.0
     container_name: mysql-db
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     ports:
       - "3307:3306"
     environment:
@@ -35,14 +40,16 @@ services:
     ports:
       - "9001:9001"
     depends_on:
-      - mysql-db
-      - eureka-server
+      mysql-db:
+          condition: service_healthy
+      eureka-server:
+          condition: service_started
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
 
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://${EUREKA_HOST}:8761/eureka/
 
       - INTERNAL_HEADER_NAME=${INTERNAL_HEADER_NAME}
       - INTERNAL_SECRET_VALUE=${INTERNAL_SECRET_VALUE}
