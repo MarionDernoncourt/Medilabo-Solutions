@@ -21,6 +21,7 @@ L'application est découpée en 6 services principaux :
 Pré-requis
 - Docker et Docker Compose
 - Java 21 et Maven (pour la compilation)
+- Node.js et npm
 
 Note sur le démarrage : Le projet utilise des Docker Healthchecks. Le microservice ms-patient attendra que la base MySQL soit totalement opérationnelle avant de démarrer pour garantir une connexion stable.
 
@@ -73,3 +74,10 @@ Normalisation : La base respecte la 3NF (3ème Forme Normale) pour minimiser la 
 ## Tests et Qualité
 - **Exécution locale** : Pour lancer les tests, utilisez la commande `mvn test`.
 - **Intégration continue (CI)** : Le projet utilise GitHub Actions. Les tests sont automatiquement exécutés à chaque push sur la branche `main` pour garantir la stabilité et la non-régression du code.
+
+## Engagement Green Code & Éco-conception
+Le projet Medilabo intègre des principes d'éco-conception pour réduire son empreinte environnementale :
+- **Optimisation de la Persistance (3NF)** : La normalisation de la base de données MySQL en 3e Forme Normale réduit la redondance des données, minimisant ainsi l'espace de stockage nécessaire et la consommation d'énergie des serveurs de base de données.
+- **Architecture Microservices ciblée** : Le découpage permet de ne mettre à l'échelle (scaler) que les services gourmands en ressources sans dupliquer l'intégralité de l'application.
+- **Réduction des transferts réseau** : Utilisation d'OpenFeign et de DTO (Data Transfer Objects) structurés pour n'échanger que les données strictement nécessaires entre les services, limitant la bande passante consommée.
+- **Qualité et Durabilité** : Un code testé (JUnit) et validé par une CI (GitHub Actions) limite les erreurs en production qui provoquent des cycles de calcul (CPU) inutiles pour le débogage.
