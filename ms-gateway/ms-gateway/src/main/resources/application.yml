@@ -17,8 +17,8 @@ spring:
   cloud:
     gateway:
       discovery:
-        locator:
-          enabled: true
+      locator:
+        enabled: true
       routes:
         #   ROUTE SERVICE PATIENT
         - id: patient-service-route
@@ -33,7 +33,7 @@ spring:
             # 🔑 On ajoute notre secret (en utilisant la variable du haut)
             - AddRequestHeader=${medilabo.security.internal-header}, ${medilabo.security.internal-secret}
 
-       # ROUTE SERVICE NOTES
+        # ROUTE SERVICE NOTES
         - id: notes-service-route
           uri: lb://MS-NOTES
           predicates:
@@ -45,7 +45,7 @@ spring:
             # 🔑 On ajoute notre secret (en utilisant la variable du haut)
             - AddRequestHeader=${medilabo.security.internal-header}, ${medilabo.security.internal-secret}
 
-      # ROUTE SERVICE REPORTS
+        # ROUTE SERVICE REPORTS
         - id: report-service-route
           uri: lb://MS-REPORTS
           predicates:

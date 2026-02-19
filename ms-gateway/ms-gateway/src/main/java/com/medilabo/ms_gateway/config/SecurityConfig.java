@@ -60,6 +60,8 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         // Autorisation de l'application Vue
         config.addAllowedOrigin("http://localhost:5173");
+        // Autorisation port Docker
+        config.addAllowedOrigin("http://localhost:8080");
         // Autorisation des methodes classiques
         config.addAllowedMethod("*");
         // Autorisation de tous les headers
