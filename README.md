@@ -70,7 +70,9 @@ Normalisation : La base respecte la 3NF (3ème Forme Normale) pour minimiser la 
 - **Filtrage interne** : Un mécanisme de filtrage basé sur un **Header-Secret**(`X-Internal-Secret`) est implémenté. Toute requête directe vers un microservice qui ne provient pas de la Gateway ou d'un service autorisé est rejetée.
 - **Service Discovery**: Utilisation d'**Eureka** pour une résolution de noms dynamique, évitant les adresses IP codées en dur.
 - **Communication inter-services(OpenFeign**): Le projet utilise **SpringCloud OpenFeign** pour les appels entre microservices. Cela permet une communication **déclarative** (via des interfaces) rendans le code plus lisible et plus facile a maintenir qu'avec un `ResTemplate` classique. Couplé a **Eureka**, OpenFeign utilise le nom des services pour résoudre les adresses automatiquement.
-  
+ 
+  <img width="473" height="459" alt="Capture d&#39;écran 2026-02-22 180051" src="https://github.com/user-attachments/assets/d82640e5-4152-4dda-9f28-376615a0a282" />
+
 ## Tests et Qualité
 - **Exécution locale** : Pour lancer les tests, utilisez la commande `mvn test`.
 - **Intégration continue (CI)** : Le projet utilise GitHub Actions. Les tests sont automatiquement exécutés à chaque push sur la branche `main` pour garantir la stabilité et la non-régression du code.
