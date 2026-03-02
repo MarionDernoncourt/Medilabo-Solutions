@@ -1,6 +1,7 @@
 # MEDILABO SOLUTIONS - Système de gestion du risque diabète
 
-**Projet de fin de formation (Développeur d'application JAVA) >** Réalisation complète de A à Z : Conception, architecture microservices, développement Backend/Frontend et déploiement Docker.
+>**Projet de fin de formation (Développeur d'application JAVA)**
+>>Réalisation complète de A à Z : Conception, architecture microservices, développement Backend/Frontend et déploiement Docker.
 
 Le projet est une application de santé composée de microservices permettant de gérer les fiches patient, de suivre leurs notes cliniques et de calculer leur niveau de risque de diabète en fonction de déclencheurs spécifiques.
 
